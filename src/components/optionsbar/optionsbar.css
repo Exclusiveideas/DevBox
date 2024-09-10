@@ -1,0 +1,96 @@
+.optionsBar {
+    background-color: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem .3rem;
+    justify-content: space-between;
+}
+
+.topOptions {
+    display: flex;
+    flex-direction: column;
+}
+
+.optionDiv {
+    padding: .7rem .2rem;
+}
+
+.optionDiv.active {
+    border-left: 2px solid white; 
+}
+
+.bottomOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+
+
+
+
+
+/* MenuPopperOne Component */
+
+.popMenuList {
+    background-color: rgb(51,51,51);
+    width: 200px;
+    border-radius: 10px;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+/* MenuPopperTwo Component */
+
+
+
+
+.popMenuList.two {
+    min-width: 300px;
+    width: 100%;
+    padding: 0.5rem 0;
+}
+
+.menuTwoGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(203, 203, 203, 0.241);
+    padding: 0.2 .8rem;
+}
+
+.menuTwoGroup:nth-last-of-type(1) {
+    border: none;
+}
+
+.mTwoGroupItem {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.menuTwoRowText{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    font-size: 10px;
+}
+
+.menuTwoRowText>p:nth-child(2) {
+    font-size: 9px;
+    color: rgb(169, 169, 169);
+}
+
+
+[aria-disabled="true"] {
+    opacity: 0.4;
+  }

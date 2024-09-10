@@ -1,0 +1,9 @@
+.structurebarDiv {
+    background-color: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem .3rem;
+    justify-content: space-between;
+    flex: .15;
+}
