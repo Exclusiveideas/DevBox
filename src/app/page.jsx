@@ -1,9 +1,9 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import TopBar from "@/components/topbar";
-import OptionBar from "@/components/optionsbar";
-import StructureBar from "@/components/structurebar";
-import EditorBar from "@/components/editorbar";
+import TopBar from "@/pageSections/topbar";
+import OptionBar from "@/pageSections/optionsbar";
+import StructureBar from "@/pageSections/structurebar";
+import EditorBar from "@/pageSections/editorbar";
 
 export default function Home() {
   return (
