@@ -6,6 +6,7 @@ import StructureBar from "@/pageSections/structurebar";
 import EditorBar from "@/pageSections/editorbar";
 
 export default function Home() {
+
   return (
     <main className={styles.main}>
       <TopBar />

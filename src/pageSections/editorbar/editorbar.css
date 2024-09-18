@@ -1,4 +1,5 @@
-.editorBarCont {
+.editorCompWrapper {
     background-color: rgb(26,26,26);
     flex: .85;
+    /* border: 1px solid white; */
 }

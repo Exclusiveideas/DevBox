@@ -1,5 +1,5 @@
 .topbar {
-    flex: .05;
+    flex: .08;
     background-color: var(--dark-bg);
     width: 100%;
     display: flex;
