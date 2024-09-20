@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./optionsbar.css";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -10,7 +10,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
-import { optionBarMenuOptOne } from "@/utils/constants";
+import { appStore } from "@/store/appStore";
 
 
 
@@ -23,27 +23,31 @@ const menuSpecials = {
 }; 
 
 const OptionBar = () => {
+  
+  const menuPopperOpts = appStore((state) => state.menuPopperOpts) // global state
+  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
+  const openMenuPopperOne = menuPopperOpts?.openOptBarMenuOne
+
+
   const [activeOpt, setactiveOpt] = useState(0);
-  const [openMenuOne, setOpenMenuOne] = useState(false);
   const anchorRefOne = useRef(null);
 
-  const handleToggleOne = () => {
-    setOpenMenuOne((prevOpen) => !prevOpen);
+  const handleToggleMenuOne = () => {
+      updateOptBarMenuOne({
+        openOptBarMenuOne: !openMenuPopperOne,
+      });
   };
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = useRef(openMenuOne);
+  const prevOpen = useRef(openMenuPopperOne);
   useEffect(() => {
-    if (prevOpen?.current === true && openMenuOne === false) {
+    if (prevOpen?.current === true && openMenuPopperOne === false) {
       anchorRefOne.current.focus();
     }
 
-    prevOpen.current = openMenuOne;
-  }, [openMenuOne]);
+    prevOpen.current = openMenuPopperOne;
+  }, [openMenuPopperOne]);
 
-  // const MenuPopperOneMemo = useMemo(() => (
-    
-  // ), [])
 
   return (
     <div className="optionsBar">
@@ -61,8 +65,8 @@ const OptionBar = () => {
                   <MenuIcon
                     ref={anchorRefOne}
                     id="menu-one-button"
-                    aria-controls={openMenuOne ? "menu-one-list" : undefined}
-                    aria-expanded={openMenuOne ? "true" : undefined}
+                    aria-controls={openMenuPopperOne ? "menu-one-list" : undefined}
+                    aria-expanded={openMenuPopperOne ? "true" : undefined}
                     aria-haspopup="true"
                     sx={{
                       color: `${
@@ -72,14 +76,12 @@ const OptionBar = () => {
                       width: "40px",
                     }}
                     onClick={() => {
-                      handleToggleOne();
+                      handleToggleMenuOne();
                       setactiveOpt(i);
                     }}
                   />
                   <MenuPopperOne
                     anchorRefOne={anchorRefOne}
-                    openMenuOne={openMenuOne}
-                    setOpenMenuOne={setOpenMenuOne}
                     menuSpecials={menuSpecials}
                     pos="optionbar"
                   />

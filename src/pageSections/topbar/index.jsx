@@ -6,6 +6,7 @@ import "./topbar.css";
 import Image from "next/image";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
+import { appStore } from "@/store/appStore";
 
 
 
@@ -21,26 +22,30 @@ const menuSpecials = {
 
 
 const TopBar = () => {
-  const languageSelect = "JavaScript";
+  const languageSelect = "JavaScript"; // change to dynamic selection
+
   
-  var ind = 1;
-  
-  const [openMenuOne, setOpenMenuOne] = React.useState(false);
+  const menuPopperOpts = appStore((state) => state.menuPopperOpts) // global state
+  const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
+  const openMenuPopperOne = menuPopperOpts?.openTopBarMenuOne;
+
   const anchorRefOne = React.useRef(null);
   
-  const handleToggleOne = () => {
-    setOpenMenuOne((prevOpen) => !prevOpen);
+  const handleToggleMenuOne = () => {
+      updateTopBarMenuOne({
+        openTopBarMenuOne: !openMenuPopperOne,
+      });
   };
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(openMenuOne);
+  const prevOpen = React.useRef(openMenuPopperOne);
   React.useEffect(() => {
-    if (prevOpen?.current === true && openMenuOne === false) {
+    if (prevOpen?.current === true && openMenuPopperOne === false) {
       anchorRefOne.current.focus();
     }
 
-    prevOpen.current = openMenuOne;
-  }, [openMenuOne]);
+    prevOpen.current = openMenuPopperOne;
+  }, [openMenuPopperOne]);
 
   return (
     <div className="topbar">
@@ -51,18 +56,15 @@ const TopBar = () => {
 
           ref={anchorRefOne}
           id="menu-one-button"
-          aria-controls={openMenuOne ? "menu-one-list" : undefined}
-          aria-expanded={openMenuOne ? "true" : undefined}
+          aria-controls={openMenuPopperOne ? "menu-one-list" : undefined}
+          aria-expanded={openMenuPopperOne ? "true" : undefined}
           aria-haspopup="true"
-          onClick={() => handleToggleOne()}
+          onClick={handleToggleMenuOne}
         />
         <MenuPopperOne
           anchorRefOne={anchorRefOne}
-          openMenuOne={openMenuOne}
-          setOpenMenuOne={setOpenMenuOne}
           pos="topbar"
           menuSpecials={menuSpecials}
-          ind={ind}
         />
       </div>
       <div className="topbarMidCont">

@@ -1,0 +1,27 @@
+.themeSelectorCont {
+    width: 40vw;
+    height: max-content;
+    border-radius: 13px;
+    background-color: #2b2b2b;
+    box-sizing: border-box;
+
+    box-shadow: 1px -2px 80px -13px rgba(0,0,0,0.53);
+-webkit-box-shadow: 1px -2px 80px -13px rgba(0,0,0,0.53);
+-moz-box-shadow: 1px -2px 80px -13px rgba(0,0,0,0.53);
+}
+
+.searchCont {
+    border-bottom: 1px solid rgba(160, 160, 160, 0.284);
+    width: 100%;
+    padding: .5rem .3rem;
+}
+
+.searchBar {
+    width: 100%;
+    padding: .4rem 1rem;
+    background-color: transparent;
+    outline: none;
+    color: rgb(226, 226, 226);
+    border: none;
+    font-size: 13px;
+}

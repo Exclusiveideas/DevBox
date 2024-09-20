@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  Backdrop,
-  CircularProgress,
   ClickAwayListener,
   Grow,
   MenuItem,
@@ -11,17 +9,28 @@ import {
 } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { optionBarMenuOptTwo, topBarMenuOptTwo } from "@/utils/constants";
+import { appStore } from "@/store/appStore";
 
 const MenuPopperTwo = React.memo(
-  ({
-    anchorRefTwo,
-    openMenuTwo,
-    setOpenMenuTwo,
-    clickedMenuOneItem,
-    openMenuOne,
-    menuSpecials,
-    pos,
-  }) => {
+  ({ anchorRefTwo, clickedMenuOneItem, menuSpecials, pos }) => {
+
+    const updateEditorBackdrop = appStore((state) => state.updateEditorBackdrop); // global state
+
+    const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
+    const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
+    const updateTopBarMenuTwo = appStore((state) => state.updateTopBarMenuTwo); // global state
+    const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
+    const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
+
+    const openMenuPopperOne = //selects either to open the topbarMenu or optionsbarMenu
+      pos == "optionbar"
+        ? menuPopperOpts?.openOptBarMenuOne
+        : menuPopperOpts?.openTopBarMenuOne;
+    const openMenuPopperTwo =
+      pos == "optionbar"
+        ? menuPopperOpts?.openOptBarMenuTwo
+        : menuPopperOpts?.openTopBarMenuTwo;
+
     const menuListTwo =
       pos == "optionbar" ? optionBarMenuOptTwo : topBarMenuOptTwo;
 
@@ -36,11 +45,18 @@ const MenuPopperTwo = React.memo(
     };
 
     function handleListKeyDown(event) {
-      if (event.key === "Tab") {
+      if (event.key === "Tab" || "Escape") {
         event.preventDefault();
-        setOpenMenuTwo(false);
-      } else if (event.key === "Escape") {
-        setOpenMenuTwo(false);
+
+        if (pos == "optionbar") {
+          updateOptBarMenuTwo({
+            openOptBarMenuTwo: false,
+          });
+        } else {
+          updateTopBarMenuTwo({
+            openTopBarMenuTwo: false,
+          });
+        }
       }
     }
 
@@ -49,7 +65,7 @@ const MenuPopperTwo = React.memo(
       e.preventDefault();
 
       const { outerText } = e?.target;
-      checkItemClick(outerText);
+      checkItemClick(outerText); // identifies which row was clicked
 
       return;
     };
@@ -65,30 +81,52 @@ const MenuPopperTwo = React.memo(
     };
 
     const selectTheme = () => {
-      handleOpenBackdrop();
+      // close menuPoppers
+      if (pos == "optionbar") {
+        updateOptBarMenuTwo({
+          openOptBarMenuTwo: false,
+        });
+      } else {
+        updateTopBarMenuTwo({
+          openTopBarMenuTwo: false,
+        });
+      }
+
+      if (pos == "optionbar") {
+        updateOptBarMenuOne({
+          openOptBarMenuOne: false,
+        });
+      } else {
+        updateTopBarMenuOne({
+          openTopBarMenuOne: false,
+        });
+      }
+
+      // opens backdrop
+      updateEditorBackdrop({
+        openBackdrop: true,
+      });
     };
 
     React.useEffect(() => {
       //when the first menu closes, close the second
-      setOpenMenuTwo(false);
-    }, [openMenuOne]);
 
-    // for backdrop component
-    const [openBackdrop, setOpenBackdrop] = React.useState(false);
-
-    const handleCloseBackdrop = () => {
-      setOpenBackdrop(false);
-    };
-
-    const handleOpenBackdrop = () => {
-      setOpenBackdrop(true);
-    };
+      if (pos == "optionbar") {
+        updateOptBarMenuTwo({
+          openOptBarMenuTwo: false,
+        });
+      } else {
+        updateTopBarMenuTwo({
+          openTopBarMenuTwo: false,
+        });
+      }
+    }, [openMenuPopperOne]);
 
     // ----------end-------
 
     return (
       <Popper
-        open={openMenuTwo}
+        open={openMenuPopperTwo}
         anchorEl={anchorRefTwo?.current}
         role={undefined}
         placement="right"
@@ -110,7 +148,7 @@ const MenuPopperTwo = React.memo(
                       <div className="menuTwoGroup" key={i}>
                         <div className="mTwoGroupItem">
                           <MenuList
-                            autoFocusItem={openMenuTwo}
+                            autoFocusItem={openMenuPopperTwo}
                             id="menu-two-list"
                             aria-labelledby="menu-two-button"
                             onKeyDown={handleListKeyDown}
@@ -179,7 +217,7 @@ const MenuPopperTwo = React.memo(
                       <div className="menuTwoGroup" key={i}>
                         <div className="mTwoGroupItem">
                           <MenuList
-                            autoFocusItem={openMenuTwo}
+                            autoFocusItem={openMenuPopperTwo}
                             id="menu-two-list"
                             aria-labelledby="menu-two-button"
                             onKeyDown={handleListKeyDown}
@@ -219,32 +257,12 @@ const MenuPopperTwo = React.memo(
                   </>
                 )}
               </ClickAwayListener>
-        <BackdropComp
-          openBackdrop={openBackdrop}
-          handleCloseBackdrop={handleCloseBackdrop}
-        />
             </Paper>
           </Grow>
         )}
-
-
       </Popper>
     );
   }
 );
 
 export default MenuPopperTwo;
-
-
-
-const BackdropComp = ({
-  openBackdrop,
-  handleCloseBackdrop,
-}) => (
-    <Backdrop
-      sx={(theme) => ({ color: "#000", zIndex: theme.zIndex.drawer + 1 })}
-      open={openBackdrop}
-      onClick={handleCloseBackdrop}
-    >
-    </Backdrop>
-  );

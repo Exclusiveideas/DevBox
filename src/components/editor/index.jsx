@@ -1,27 +1,21 @@
 "use client";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { useEffect, useRef, useState } from "react";
-// import * as monaco from 'monaco-editor';
-// import { ESLint } from 'eslint';
+import { useEffect } from "react";
+import EditorBackDrop from "../editorBackdrop";
+import { editorThemes } from "@/utils/editorContants";
+import { appStore } from "@/store/appStore";
+
 
 const EditorComp = () => {
   const monaco = useMonaco();
-
-  // disable the built-in linter:
-  // useEffect(() => {
-  //   if(!monaco) return;
-
-  //   // disable the built-in linter:
-  //   monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-  //     noSemanticValidation: true,
-  //     noSyntaxValidation: true,
-  //   });
-
-  // }, [monaco]);
+  const { theme } = appStore((state) => state.editorOpts); // global state
 
   useEffect(() => {
     if (!monaco) return;
+
+    // set default theme
+    if(theme) monaco.editor.setTheme(theme);
 
     monaco.editor.defineTheme("ace", {
       base: "vs",
@@ -73,7 +67,7 @@ const EditorComp = () => {
         { token: "operator.sql", foreground: "778899" }, //
         { token: "operator.swift", foreground: "666666" }, //
         { token: "predefined.sql", foreground: "FF00FF" }, //
-      ],
+      ], 
       colors: {
         "editor.background": "#fafafa",
         "editor.foreground": "#5c6773",
@@ -81,16 +75,22 @@ const EditorComp = () => {
         "editorIndentGuide.activeBackground": "#e0e0e0",
       },
     });
+
+    // add the newly defined themes to the list of registered Themes
+    editorThemes?.push('ace')
   }, [monaco]);
 
   return (
-    <Editor
-      height="100%"
-      defaultLanguage="javascript"
-      defaultValue='console.log("Hello World")'
-      theme="vs-dark"
-      // onChange={handleEditorChange}
-    />
+    <>
+      <Editor
+        height="100%"
+        defaultLanguage="javascript"
+        defaultValue='console.log("Hello World")'
+        theme="vs-dark"
+        // onChange={handleEditorChange}
+      />
+      <EditorBackDrop />
+    </>
   );
 };
 
