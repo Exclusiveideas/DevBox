@@ -5,17 +5,43 @@ import { useEffect } from "react";
 import EditorBackDrop from "../editorBackdrop";
 import { editorThemes } from "@/utils/editorContants";
 import { appStore } from "@/store/appStore";
-
+import "./editor.css";
+import {
+  Breadcrumbs,
+  TabsList,
+  getFileTree,
+  updateFile,
+  getSelectedFile,
+} from "@litecode-ide/virtual-file-system";
+import "@litecode-ide/virtual-file-system/dist/style.css";
 
 const EditorComp = () => {
   const monaco = useMonaco();
   const { theme } = appStore((state) => state.editorOpts); // global state
+  const { value: vfsStateValue } = appStore((state) => state.vfsState); // global state
+  const updateVFSStateValue = appStore((state) => state.updateVFSStateValue);
+  const { value: activeFileValue } = appStore((state) => state.activeFile); // global state
+  const updateActiveFileValue = appStore(
+    (state) => state.updateActiveFileValue
+  );
+
+  const handleEditorChange = (value) => {
+    updateActiveFileValue({
+      value: value,
+    });
+
+    updateFile(getSelectedFile(), value);
+  };
+
+  const updateFileContents = (e) => {
+    updateFile(getSelectedFile(), e.target.value);
+  };
 
   useEffect(() => {
     if (!monaco) return;
 
     // set default theme
-    if(theme) monaco.editor.setTheme(theme);
+    if (theme) monaco.editor.setTheme(theme);
 
     monaco.editor.defineTheme("ace", {
       base: "vs",
@@ -67,7 +93,7 @@ const EditorComp = () => {
         { token: "operator.sql", foreground: "778899" }, //
         { token: "operator.swift", foreground: "666666" }, //
         { token: "predefined.sql", foreground: "FF00FF" }, //
-      ], 
+      ],
       colors: {
         "editor.background": "#fafafa",
         "editor.foreground": "#5c6773",
@@ -77,20 +103,51 @@ const EditorComp = () => {
     });
 
     // add the newly defined themes to the list of registered Themes
-    editorThemes?.push('ace')
-  }, [monaco]);
+    editorThemes?.push("ace");
+  }, [monaco, theme]);
+
+  const updateFileValue = (fileValue) => {
+    updateActiveFileValue({
+      value: fileValue,
+    });
+  };
+
+  const getFileContents = (id) => {
+    if (id === "") {
+      return "";
+    }
+
+    const file = Object.values(getFileTree()).find(({ id: _id }) => _id === id);
+    return file ? file.content : undefined;
+  };
 
   return (
-    <>
-      <Editor
-        height="100%"
-        defaultLanguage="javascript"
-        defaultValue='console.log("Hello World")'
-        theme="vs-dark"
-        // onChange={handleEditorChange}
-      />
-      <EditorBackDrop />
-    </>
+    <div className="EditorCompWrapper">
+      <div className="TablistWrapper">
+        <TabsList
+          onTabClick={(id) => updateFileValue(getFileContents(id))}
+          onTabClose={() => {
+            updateFileValue(getFileContents(getSelectedFile()));
+          }}
+          containerClassName='min-h-max gap-4'
+          tabClassName="min-h-max w-30 p-10px text-xs mr-10px"
+        />
+        <Breadcrumbs
+          onBreadcrumbFileClick={(id) => updateFileValue(getFileContents(id))}
+        />
+      </div>
+      <div className="monacoEditorWrapper">
+        <Editor
+          height="100%"
+          defaultLanguage="javascript"
+          defaultValue={""}
+          value={activeFileValue}
+          theme="vs-dark"
+          onChange={handleEditorChange}
+        />
+        <EditorBackDrop />
+      </div>
+    </div>
   );
 };
 

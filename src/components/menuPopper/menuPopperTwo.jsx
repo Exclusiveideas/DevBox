@@ -120,7 +120,7 @@ const MenuPopperTwo = React.memo(
           openTopBarMenuTwo: false,
         });
       }
-    }, [openMenuPopperOne]);
+    }, [openMenuPopperOne, pos, updateOptBarMenuTwo, updateTopBarMenuTwo]);
 
     // ----------end-------
 
@@ -264,5 +264,8 @@ const MenuPopperTwo = React.memo(
     );
   }
 );
+
+MenuPopperTwo.displayName = "MenuPopperTwo";
+
 
 export default MenuPopperTwo;

@@ -12,30 +12,35 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
 import { appStore } from "@/store/appStore";
 
-
-
 const menuSpecials = {
   menuTwoWithExpand: ["Appearance", "Editor Layout"],
 
   menuTwoPreIcon: ["Auto Save", "Confirm Before Close"], // work on this later,
 
   menuTwoDisabled: ["Forward", "Last Edit Location"],
-}; 
+};
 
 const OptionBar = () => {
-  
-  const menuPopperOpts = appStore((state) => state.menuPopperOpts) // global state
-  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
-  const openMenuPopperOne = menuPopperOpts?.openOptBarMenuOne
+  const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
+  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne);
+  const openMenuPopperOne = menuPopperOpts?.openOptBarMenuOne;
 
+  const { activeOpt } = appStore((state) => state.optionBar); // global state
+  const updateActiveOptBar = appStore((state) => state.updateActiveOptBar);
 
-  const [activeOpt, setactiveOpt] = useState(0);
   const anchorRefOne = useRef(null);
 
   const handleToggleMenuOne = () => {
-      updateOptBarMenuOne({
-        openOptBarMenuOne: !openMenuPopperOne,
-      });
+    updateOptBarMenuOne({
+      openOptBarMenuOne: !openMenuPopperOne,
+    });
+  };
+
+  const handleActiveOptUpdate = (i) => {
+    updateActiveOptBar({
+      activeOpt: i,
+    });
+    console.log("activeOpt: ", activeOpt);
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -48,46 +53,42 @@ const OptionBar = () => {
     prevOpen.current = openMenuPopperOne;
   }, [openMenuPopperOne]);
 
-
   return (
     <div className="optionsBar">
       <div className="topOptions">
-        {Array(4)
+        <div className="optionDiv">
+          <div className="optionIcon">
+            <MenuIcon
+              ref={anchorRefOne}
+              id="menu-one-button"
+              aria-controls={openMenuPopperOne ? "menu-one-list" : undefined}
+              aria-expanded={openMenuPopperOne ? "true" : undefined}
+              aria-haspopup="true"
+              sx={{
+                color: `${
+                  openMenuPopperOne ? "white" : "rgba(195, 195, 195, 0.934)"
+                }`,
+                cursor: "pointer",
+                width: "40px",
+              }}
+              onClick={handleToggleMenuOne}
+            />
+            <MenuPopperOne
+              anchorRefOne={anchorRefOne}
+              menuSpecials={menuSpecials}
+              pos="optionbar"
+            />
+          </div>
+        </div>
+        {Array(3)
           .fill()
           .map((_, i) => (
             <div
               key={i}
               className={`optionDiv ${activeOpt == i && "active"}`}
-              onClick={() => setactiveOpt(i)}
+              onClick={() => handleActiveOptUpdate(i)}
             >
               {i == 0 && (
-                <div className="optionIcon">
-                  <MenuIcon
-                    ref={anchorRefOne}
-                    id="menu-one-button"
-                    aria-controls={openMenuPopperOne ? "menu-one-list" : undefined}
-                    aria-expanded={openMenuPopperOne ? "true" : undefined}
-                    aria-haspopup="true"
-                    sx={{
-                      color: `${
-                        activeOpt == i ? "white" : "rgba(195, 195, 195, 0.934)"
-                      }`,
-                      cursor: "pointer",
-                      width: "40px",
-                    }}
-                    onClick={() => {
-                      handleToggleMenuOne();
-                      setactiveOpt(i);
-                    }}
-                  />
-                  <MenuPopperOne
-                    anchorRefOne={anchorRefOne}
-                    menuSpecials={menuSpecials}
-                    pos="optionbar"
-                  />
-                </div>
-              )}
-              {i == 1 && (
                 <div className="optionIcon">
                   <FileCopyIcon
                     sx={{
@@ -97,11 +98,11 @@ const OptionBar = () => {
                       cursor: "pointer",
                       width: "40px",
                     }}
-                    onClick={() => setactiveOpt(i)}
+                    onClick={() => handleActiveOptUpdate(i)}
                   />
                 </div>
               )}
-              {i == 2 && (
+              {i == 1 && (
                 <div className="optionIcon">
                   <SearchIcon
                     sx={{
@@ -111,11 +112,11 @@ const OptionBar = () => {
                       cursor: "pointer",
                       width: "40px",
                     }}
-                    onClick={() => setactiveOpt(i)}
+                    onClick={() => handleActiveOptUpdate(i)}
                   />
                 </div>
               )}
-              {i == 3 && (
+              {i == 2 && (
                 <div className="optionIcon">
                   <GitHubIcon
                     sx={{
@@ -125,7 +126,7 @@ const OptionBar = () => {
                       cursor: "pointer",
                       width: "40px",
                     }}
-                    onClick={() => setactiveOpt(i)}
+                    onClick={() => handleActiveOptUpdate(i)}
                   />
                 </div>
               )}
@@ -145,9 +146,3 @@ const OptionBar = () => {
 };
 
 export default OptionBar;
-
-
-
-
-
-

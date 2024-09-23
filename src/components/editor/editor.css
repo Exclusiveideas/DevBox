@@ -1,0 +1,19 @@
+.EditorCompWrapper {
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.TablistWrapper {
+    /* flex: .5; */
+    flex: .1;
+    height: max-content;
+    /* border: 1px solid white; */
+    padding: .3rem 1rem;
+}
+
+.monacoEditorWrapper {
+    flex: 1
+}

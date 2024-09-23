@@ -192,4 +192,6 @@ const MenuPopperOne = React.memo(({ anchorRefOne, menuSpecials, pos }) => {
   );
 });
 
+MenuPopperOne.displayName = "MenuPopperOne";
+
 export default MenuPopperOne;

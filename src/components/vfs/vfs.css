@@ -1,0 +1,9 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+
+.ccb {
+    color: white;
+    font-size: 13px;
+}

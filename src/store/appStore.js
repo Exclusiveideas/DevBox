@@ -29,4 +29,22 @@ export const appStore = create((set) => ({
     updateOptBarMenuTwo: ({openOptBarMenuTwo}) => set((state) => ({
         menuPopperOpts: {...state.menuPopperOpts, openOptBarMenuTwo}
     })),
+    optionBar: {
+        activeOpt: 0
+    },
+    updateActiveOptBar: ({activeOpt}) => set((state) => ({
+        optionBar: {...state.optionBar, activeOpt}
+    })),
+    vfsState: {
+        value: null
+    },
+    updateVFSStateValue: ({value}) => set((state) => ({
+        vfsState: {...state.vfsState, value}
+    })),
+    activeFile: {
+        value: null
+    },
+    updateActiveFileValue: ({value}) => set((state) => ({
+        activeFile: {...state.activeFile, value}
+    })),
 }))
