@@ -14,27 +14,32 @@ import {
   getSelectedFile,
 } from "@litecode-ide/virtual-file-system";
 import "@litecode-ide/virtual-file-system/dist/style.css";
+import TerminalComponent from "../terminal";
+import { debounce } from "@/utils/functions";
+
 
 const EditorComp = () => {
   const monaco = useMonaco();
   const { theme } = appStore((state) => state.editorOpts); // global state
-  const { value: vfsStateValue } = appStore((state) => state.vfsState); // global state
-  const updateVFSStateValue = appStore((state) => state.updateVFSStateValue);
   const { value: activeFileValue } = appStore((state) => state.activeFile); // global state
   const updateActiveFileValue = appStore(
     (state) => state.updateActiveFileValue
   );
 
+
   const handleEditorChange = (value) => {
+    // change this such that it updates change after 30seconds
     updateActiveFileValue({
       value: value,
     });
 
-    updateFile(getSelectedFile(), value);
-  };
+    // Debounced function to update file content
+    const debouncedSave = debounce(() => {
+      updateFile(getSelectedFile(), value);
+    }, 1000); // 1 sec delay
 
-  const updateFileContents = (e) => {
-    updateFile(getSelectedFile(), e.target.value);
+    // Trigger the debounced function
+    debouncedSave();
   };
 
   useEffect(() => {
@@ -146,6 +151,9 @@ const EditorComp = () => {
           onChange={handleEditorChange}
         />
         <EditorBackDrop />
+      </div>
+      <div className="terminalWrapper">
+        <TerminalComponent />
       </div>
     </div>
   );

@@ -7,13 +7,18 @@
 }
 
 .TablistWrapper {
-    /* flex: .5; */
-    flex: .1;
-    height: max-content;
+    height: 7%;
+    max-height: max-content;
     /* border: 1px solid white; */
     padding: .3rem 1rem;
 }
 
 .monacoEditorWrapper {
-    flex: 1
+    flex: 1;
+}
+
+.terminalWrapper {
+    height: 30%;
+    border: 1px solid white;
+    box-sizing: border-box;
 }

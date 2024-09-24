@@ -35,12 +35,12 @@ export const appStore = create((set) => ({
     updateActiveOptBar: ({activeOpt}) => set((state) => ({
         optionBar: {...state.optionBar, activeOpt}
     })),
-    vfsState: {
-        value: null
-    },
-    updateVFSStateValue: ({value}) => set((state) => ({
-        vfsState: {...state.vfsState, value}
-    })),
+    // vfsState: {
+    //     value: null
+    // },
+    // updateVFSStateValue: ({value}) => set((state) => ({
+    //     vfsState: {...state.vfsState, value}
+    // })),
     activeFile: {
         value: null
     },

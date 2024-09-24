@@ -5,15 +5,15 @@ import {
     SearchInput,
     SearchResults,
     getFileTree,
-    updateFile,
-    getSelectedFile,
   } from "@litecode-ide/virtual-file-system";
   import "@litecode-ide/virtual-file-system/dist/style.css";
 import { appStore } from '@/store/appStore';
 
 const SearchInFiles = () => {
+  const updateActiveFileValue = appStore(
+    (state) => state.updateActiveFileValue
+  );
     
-    const updateVFSStateValue = appStore((state) => state.updateVFSStateValue); // global state
   
     const getFileContents = (id) => {
       if (id === "") {
@@ -32,9 +32,9 @@ const SearchInFiles = () => {
         <div className="flex flex-col h-full w-1/4">
         <SearchResults
           searchResultClicked={(id, line) =>
-            updateVFSStateValue({
-                value: getFileContents(id),
-              })
+            updateActiveFileValue({
+              value: getFileContents(id),
+            })
           }
         />
       </div>
