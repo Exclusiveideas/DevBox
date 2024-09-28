@@ -14,8 +14,11 @@ import {
   getSelectedFile,
 } from "@litecode-ide/virtual-file-system";
 import "@litecode-ide/virtual-file-system/dist/style.css";
-import TerminalComponent from "../terminal";
+// import TerminalComponent from "../terminal";
 import { debounce } from "@/utils/functions";
+import dynamic from "next/dynamic";
+
+const TerminalComponent = dynamic(() => import('../terminal'), { ssr: false });
 
 
 const EditorComp = () => {
@@ -25,7 +28,7 @@ const EditorComp = () => {
   const updateActiveFileValue = appStore(
     (state) => state.updateActiveFileValue
   );
-
+ 
 
   const handleEditorChange = (value) => {
     // change this such that it updates change after 30seconds
@@ -33,6 +36,8 @@ const EditorComp = () => {
       value: value,
     });
 
+    if(!getSelectedFile()) return // no active file
+    
     // Debounced function to update file content
     const debouncedSave = debounce(() => {
       updateFile(getSelectedFile(), value);
@@ -106,6 +111,7 @@ const EditorComp = () => {
         "editorIndentGuide.activeBackground": "#e0e0e0",
       },
     });
+
 
     // add the newly defined themes to the list of registered Themes
     editorThemes?.push("ace");

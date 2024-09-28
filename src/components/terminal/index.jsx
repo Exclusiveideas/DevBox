@@ -1,9 +1,15 @@
-// 'use client'
+"use client";
 
 import React, { useEffect, useRef } from "react";
 import { Terminal } from "@xterm/xterm";
 import "xterm/css/xterm.css";
 import { FitAddon } from "@xterm/addon-fit";
+import "./terminal.css";
+import { io } from "socket.io-client";
+import { appStore } from "@/store/appStore";
+import {
+  getFileTree,
+} from "@litecode-ide/virtual-file-system";
 
 const terminalOptions = {
   cursorBlink: true,
@@ -20,10 +26,23 @@ const terminalOptions = {
   fontSize: 14,
 };
 
+const SERVERDOMAIN = "http://localhost:8080/";
+
 const TerminalComponent = () => {
   const terminalRef = useRef(null);
-  const xtermInstance = useRef(null); 
+  const xtermInstance = useRef(null);
   const fitAddon = useRef(new FitAddon());
+  const buffer = useRef(""); // To store the current line of input
+  const socketRef = useRef(null);
+  const activeFileValRef = useRef(appStore((state) => state.activeFile));
+
+  const { value: activeFileValue } = appStore((state) => state.activeFile);
+  const updatePreviewTab = appStore((state) => state.updatePreviewTab);
+
+  useEffect(() => {
+    activeFileValRef.current = activeFileValue
+  }, [activeFileValue]);
+  
 
   useEffect(() => {
     if (!terminalRef.current) return;
@@ -32,63 +51,173 @@ const TerminalComponent = () => {
     const term = new Terminal(terminalOptions);
     xtermInstance.current = term;
 
+    // Initialize socket connection to your backend server
+    socketRef.current = io(SERVERDOMAIN);
+
     term.loadAddon(fitAddon.current);
     term.open(terminalRef.current);
+    term.writeln('> Terminal')
+    term.write('> ')
 
-    // Now call fitAddon.fit() after the terminal is opened
-    // fitAddon.current.fit();
+    term.attachCustomKeyEventHandler((event) => {
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault(); // Prevent default behavior
+        return false; // Stop propagation
+      }
+      return true; // Allow other keys
+    })
 
-
-    term.writeln("Welcome to your custom terminal!");
+    socketRef.current.on("connect", () => {
+      // console.log("socket.id: ", socketRef.current.id);
+    });
 
     // Handle input from the user (e.g., compile command)
     term.onData((data) => {
-      handleTerminalInput(data);
+      handleTerminalInput(data, term);
     });
 
-    // Cleanup on component unmount
+    const handleOutput = (data) => {
+      const convertedData = Buffer.from(data, "base64").toString();
+      console.log("data: ", convertedData);
+      term.write(convertedData);
+      term.writeln("");
+      term.write("> ");
+    };
+
+    // Ensure no duplicate listeners by cleaning up any existing ones first
+    socketRef.current.off("output", handleOutput); // Remove the listener first if it exists
+    socketRef.current.on("output", handleOutput); // Add the listener for "output"
+
+   
     return () => {
       if (xtermInstance.current) {
         xtermInstance.current.dispose();
       }
+
+      socketRef.current.disconnect(); // Cleanup socket connection
     };
   }, []);
-
-  // Function to handle terminal commands
-  const handleTerminalInput = (input) => {
-    const command = input.trim();
-
-    if (command === "clear") {
-      xtermInstance.current.clear();
-    } else {
-      // Implement command handling logic
-      xtermInstance.current.writeln(command);
-    }
-  };
 
   // Handle terminal resize on window resize
   useEffect(() => {
     const handleResize = () => {
       if (fitAddon.current) {
-        fitAddon.current.fit();
+        // fitAddon.current.fit();
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup the event listener on unmount
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  return (
-    <div
-      ref={terminalRef}
-      style={{ height: '300px', width: '100%', backgroundColor: '#000' }}
-      id="terminal-container"
-    ></div>
-  );
+  const handleTerminalInput = (data, term) => {
+    const code = data.charCodeAt(0);
+    switch (code) {
+      case 13: // Enter
+        term.write("\r\n");
+        handleEnterKey(buffer.current, term);
+        buffer.current = "";
+        term.write("> ");
+        break;
+      case 127: // Backspace
+        if (buffer.current.length > 0) {
+          buffer.current = buffer.current.slice(0, -1);
+          // Move cursor back, clear the last character, and move back again
+          term.write("\b \b");
+        }
+        break;
+      case 32: // Space
+        buffer.current += " "; 
+        term.write(" "); 
+        break;
+      default:
+        // For all other characters, add them to the buffer and terminal
+        buffer.current += data;
+        term.write(data);
+        break;
+    }
+  };
+
+  const handleEnterKey = (command, term) => {
+    const trimmedCommand = command.trim()
+    if (!trimmedCommand) return;
+
+    switch (trimmedCommand) {
+      case "clear":
+        term.clear();
+        term.writeln("> Terminal");
+        break;
+      case "compile":
+        if (activeFileValRef.current) {
+          console.log(getSelectedFile())
+          term.writeln("> Compiling Active File");
+          sendCompileCommand(activeFileValRef.current);
+        } else {
+          term.writeln("> Nothing to compile: Make sure your file is open and active");
+        }
+        break;
+      default:
+        if (trimmedCommand.startsWith("render")) {
+          // Extract the text after "render"
+          const renderPath = trimmedCommand.slice("render".length).trim();
+  
+          if (renderPath) {
+            renderFilePath(renderPath, term)
+          } else {
+            term.writeln("> Please provide a path to render");
+          }
+        } else {
+          term.writeln(`> Command not recognized: ${trimmedCommand}`);
+        }
+        break;
+    }
+  };
+
+  const sendCompileCommand = (code) => {
+    const encodedCommand = btoa(code); 
+    socketRef.current.emit("input", encodedCommand); // Send input to the backend
+  };
+
+  const renderFilePath = (path, term) => {
+
+    if (!path.endsWith(".html")) {
+      term.writeln("> Devbox can only render .html files");
+      return
+    }
+
+    const tree = getFileTree();
+    let pathExist = false;
+
+    for (let key in tree) {
+      if (tree.hasOwnProperty(key) && key == path) { // Check if the property is not inherited
+        pathExist = true
+        term.writeln(`> Rendering ${path} ...`);
+    
+        updatePreviewTab({
+          open: true,
+          renderContent: tree[key].content,
+        });
+        return
+      } 
+    }
+    
+
+    if(!pathExist) {
+      term.writeln(`${path} does not exist`);
+      term.writeln(`Tip: start from the top directory "/" i.e render /folder1/xxx.html`);
+    }
+  };
+
+  return <div ref={terminalRef} id="terminal-container"></div>;
 };
 
 export default TerminalComponent;
+
+
+// console.log("Hello World")
+// const sum = (a,b) => a + b
+// console.log(sum(2,3))

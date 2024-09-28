@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import zukeeper from 'zukeeper'
 
-export const appStore = create((set) => ({
+export const appStore = create(zukeeper((set) => ({
     editorOpts: {
         openBackdrop: false,
         theme: ''
@@ -35,16 +36,17 @@ export const appStore = create((set) => ({
     updateActiveOptBar: ({activeOpt}) => set((state) => ({
         optionBar: {...state.optionBar, activeOpt}
     })),
-    // vfsState: {
-    //     value: null
-    // },
-    // updateVFSStateValue: ({value}) => set((state) => ({
-    //     vfsState: {...state.vfsState, value}
-    // })),
     activeFile: {
         value: null
     },
     updateActiveFileValue: ({value}) => set((state) => ({
         activeFile: {...state.activeFile, value}
     })),
-}))
+    previewTab: {
+        open: true,
+        renderContent: ''
+    },
+    updatePreviewTab: ({open, renderContent}) => set((state) => ({
+        previewTab: {...state.previewTab, open, renderContent}
+    })),
+})))

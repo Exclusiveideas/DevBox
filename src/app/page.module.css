@@ -7,7 +7,6 @@
   align-items: center;
   height: 100vh;
   box-sizing: border-box;
-  /* border: 1px solid red; */
 }
 
 
@@ -18,4 +17,48 @@
   display: flex;
   justify-content: flex-start;
   height: calc(100vh - 50px);
+  display: flex;
+  flex-grow: 1;
+}
+
+.editPrevDiv {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 700px;
+  flex-grow: 1;
+}
+
+.seperatorDiv {
+  width: 8px;
+  background-color: blanchedalmond;
+  height: 100%;
+}
+
+
+
+.optionBar {
+  width: 250px;
+  /* Additional styles for OptionBar */
+}
+
+.structureBar {
+  width: 250px;
+  /* Additional styles for StructureBar */
+}
+
+
+.editor {
+  flex-grow: 1;
+  background-color: red;
+  /* Additional styles for Editor */
+}
+
+.plugin {
+  background-color: blue;
+  /* Additional styles for Plugin */
+}
+
+.dragging {
+  /* Styles for when dragging is active */
 }

@@ -9,5 +9,9 @@
     align-items: flex-start;
     padding: 1rem .3rem;
     justify-content: space-between;
-    flex: .15;
+    /* flex: .15; */
+    /* /* flex-grow: 1; */
+    /* flex-shrink: 0; */
+    /* flex-basis: 0; */
+    width: 13%;
 }

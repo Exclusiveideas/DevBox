@@ -5,6 +5,12 @@
     align-items: flex-start;
     padding: 1rem .3rem;
     justify-content: space-between;
+    /* flex: .03; */
+  /* flex-grow: 1;
+  flex-shrink: 0; */
+  /* flex-basis: 0; */
+  width: 5%;
+  /* border: 1px solid white; */
 }
 
 .topOptions {

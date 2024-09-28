@@ -1,0 +1,9 @@
+/* Hides scrollbar for the xterm terminal */
+/* .xterm .xterm-viewport::-webkit-scrollbar { */
+    /* display: none; Hides the scrollbar in WebKit browsers (Chrome, Safari) */
+  /* }
+  
+  .xterm .xterm-viewport { */
+    /* scrollbar-width: none; /* Hides the scrollbar in Firefox */
+    /* -ms-overflow-style: none; Hides scrollbar for Internet Explorer and Edge */
+  /* } */ 

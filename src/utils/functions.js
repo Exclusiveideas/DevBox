@@ -1,5 +1,4 @@
 
-
 // Helper function for debounce
 export function debounce(func, delay) {
     let timeout;
@@ -8,3 +7,5 @@ export function debounce(func, delay) {
       timeout = setTimeout(() => func(...args), delay);
     };
   }
+
+export const cn = (...args) => args.filter(Boolean).join(" ");
