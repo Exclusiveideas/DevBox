@@ -5,7 +5,7 @@ import "./previewTab.css";
 import { appStore } from "@/store/appStore";
 import CloseIcon from "@mui/icons-material/Close";
 
-const PreviewTab = ({ resizableWidth}) => {
+const PreviewTab = () => {
   const previewTab = appStore((state) => state.previewTab);
   const updatePreviewTab = appStore((state) => state.updatePreviewTab);
 
@@ -17,7 +17,7 @@ const PreviewTab = ({ resizableWidth}) => {
     setHtmlContent(previewTab.renderContent);
   }, [previewTab]);
 
-  const closePreviewTab = () => {
+  const closePreviewTab = () => { 
     updatePreviewTab({
         open: false,
         renderContent: ''
@@ -25,7 +25,7 @@ const PreviewTab = ({ resizableWidth}) => {
   }
 
   return (
-    <div className="previewTabCont" style={{ width: resizableWidth}}>
+    <div className="previewTabCont">
       <div className="previewTopCont">
         <div className="titleWrapper">
           <p>Preview Tab</p>

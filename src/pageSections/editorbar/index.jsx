@@ -1,14 +1,11 @@
 import React from 'react';
 import './editorbar.css'
 import EditorComp from '@/components/editor';
-import { appStore } from '@/store/appStore';
 
-const EditorBar = ({ position }) => {
-  const previewTab = appStore((state) => state.previewTab);
+const EditorBar = () => {
 
   return (
-    // <div style={{ width: previewTab.open ? '70%': '100%', }} className='editorCompWrapper'>
-    <div style={{ width: `calc(100% - ${position}px)` }} className='editorCompWrapper'>
+    <div className='editorCompWrapper'>
       <EditorComp />
     </div>
   )
