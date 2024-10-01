@@ -1,12 +1,13 @@
 "use client"
 
 
-import React from "react";
+import React, { useState } from "react";
 import "./topbar.css";
 import Image from "next/image";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
 import { appStore } from "@/store/appStore";
+import { editorFileLanguage } from "@/utils/editorConstants";
 
 
 
@@ -22,9 +23,10 @@ const menuSpecials = {
 
 
 const TopBar = () => {
-  const languageSelect = "JavaScript"; // change to dynamic selection
+  const [languageSelect, setLanguageSelect] = useState('JavaScript')
 
   
+  const activeFile = appStore((state) => state.activeFile) // global state
   const menuPopperOpts = appStore((state) => state.menuPopperOpts) // global state
   const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
   const openMenuPopperOne = menuPopperOpts?.openTopBarMenuOne;
@@ -47,10 +49,25 @@ const TopBar = () => {
     prevOpen.current = openMenuPopperOne;
   }, [openMenuPopperOne]);
 
+
+  React.useEffect(() => {
+    if(activeFile?.ext == '') {
+      setLanguageSelect('unrecognized')
+      return
+    }
+    for(let i = 0; i < editorFileLanguage?.length; i++) {
+      if(editorFileLanguage[i].ext == [activeFile?.ext]) {
+        setLanguageSelect(editorFileLanguage[i]?.name)
+        return
+      }
+    }
+  }, [activeFile])
+  
+
   return (
     <div className="topbar">
       <div className="topbarLeftCont">
-        <Image src="/logo.png" width={60} height={38} alt="DevBpx logo" />
+        <Image src="/logo.png" width={60} height={38} alt="DevBox logo" />
         <ExpandMoreIcon
           sx={{ color: "white", cursor: "pointer", width: "15px" }}
 
@@ -71,9 +88,6 @@ const TopBar = () => {
         <div className="languageBox">
           <p>DevBox / {languageSelect}</p>
         </div>
-        <ExpandMoreIcon
-          sx={{ color: "white", cursor: "pointer", width: "15px" }}
-        />
       </div>
       <div className="topbarRightCont">
         <div className="userIcon">

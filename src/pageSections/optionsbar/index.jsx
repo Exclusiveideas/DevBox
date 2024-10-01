@@ -12,13 +12,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
 import { appStore } from "@/store/appStore";
 
-const menuSpecials = {
-  menuTwoWithExpand: ["Appearance", "Editor Layout"],
 
-  menuTwoPreIcon: ["Auto Save", "Confirm Before Close"], // work on this later,
-
-  menuTwoDisabled: ["Forward", "Last Edit Location"],
-};
 
 const OptionBar = () => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
@@ -40,7 +34,7 @@ const OptionBar = () => {
     updateActiveOptBar({
       activeOpt: i,
     });
-    console.log("activeOpt: ", activeOpt);
+    
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -75,7 +69,6 @@ const OptionBar = () => {
             />
             <MenuPopperOne
               anchorRefOne={anchorRefOne}
-              menuSpecials={menuSpecials}
               pos="optionbar"
             />
           </div>

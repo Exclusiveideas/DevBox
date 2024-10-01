@@ -4,7 +4,7 @@ import zukeeper from 'zukeeper'
 export const appStore = create(zukeeper((set) => ({
     editorOpts: {
         openBackdrop: false,
-        theme: ''
+        theme: '',
     },
     updateEditorBackdrop: ({openBackdrop}) => set((state) => ({
         editorOpts: {...state.editorOpts, openBackdrop}
@@ -37,16 +37,23 @@ export const appStore = create(zukeeper((set) => ({
         optionBar: {...state.optionBar, activeOpt}
     })),
     activeFile: {
-        value: null
+        value: null,
+        ext: ''
     },
-    updateActiveFileValue: ({value}) => set((state) => ({
-        activeFile: {...state.activeFile, value}
+    updateActiveFile: ({value, ext}) => set((state) => ({
+        activeFile: {...state.activeFile, value, ext}
     })),
     previewTab: {
-        open: true,
+        open: false,
         renderContent: ''
     },
     updatePreviewTab: ({open, renderContent}) => set((state) => ({
         previewTab: {...state.previewTab, open, renderContent}
+    })),
+    terminal: {
+        open: false,
+    },
+    updateTerminal: ({open}) => set((state) => ({
+        terminal: {...state.previewTab, open}
     })),
 })))

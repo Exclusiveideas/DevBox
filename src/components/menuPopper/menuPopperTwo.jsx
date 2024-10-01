@@ -8,19 +8,27 @@ import {
   Popper,
 } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { optionBarMenuOptTwo, topBarMenuOptTwo } from "@/utils/constants";
+import CheckIcon from "@mui/icons-material/Check";
+import {
+  menuSpecials,
+  optionBarMenuOptTwo,
+  topBarMenuOptTwo,
+} from "@/utils/constants";
 import { appStore } from "@/store/appStore";
 
 const MenuPopperTwo = React.memo(
-  ({ anchorRefTwo, clickedMenuOneItem, menuSpecials, pos }) => {
-
-    const updateEditorBackdrop = appStore((state) => state.updateEditorBackdrop); // global state
+  ({ anchorRefTwo, clickedMenuOneItem, pos }) => {
+    const updateEditorBackdrop = appStore(
+      (state) => state.updateEditorBackdrop
+    ); // global state
 
     const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
     const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
     const updateTopBarMenuTwo = appStore((state) => state.updateTopBarMenuTwo); // global state
     const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
     const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
+    const updateActiveOptBar = appStore((state) => state.updateActiveOptBar);
+    const updateTerminal = appStore((state) => state.updateTerminal);
 
     const openMenuPopperOne = //selects either to open the topbarMenu or optionsbarMenu
       pos == "optionbar"
@@ -73,14 +81,35 @@ const MenuPopperTwo = React.memo(
     const checkItemClick = (outerText) => {
       switch (outerText) {
         case "Color Theme":
+          closeMenuPopper();
           selectTheme();
           break;
+        case "Find in Files":
+          closeMenuPopper();
+          updateActiveOptBar({
+            activeOpt: 1,
+          });
+          break;
+        case "About":
+          closeMenuPopper();
+          const newWindow = window.open(
+            "https://github.com/Exclusiveideas/DevBox",
+            "_blank",
+            "noopener,noreferrer"
+          );
+          if (newWindow) newWindow.opener = null;
+          break;
+        case "New Terminal":
+          closeMenuPopper();
+          updateTerminal({
+            open: true,
+          });
         default:
           return;
       }
     };
 
-    const selectTheme = () => {
+    const closeMenuPopper = () => {
       // close menuPoppers
       if (pos == "optionbar") {
         updateOptBarMenuTwo({
@@ -101,7 +130,9 @@ const MenuPopperTwo = React.memo(
           openTopBarMenuOne: false,
         });
       }
+    };
 
+    const selectTheme = () => {
       // opens backdrop
       updateEditorBackdrop({
         openBackdrop: true,
@@ -200,6 +231,24 @@ const MenuPopperTwo = React.memo(
                                           cursor: "pointer",
                                           width: "13px",
                                         }}
+                                        aria-disabled={
+                                          menuSpecials[
+                                            "menuTwoDisabled"
+                                          ]?.includes(mTwoGroupItem[0])
+                                            ? "true"
+                                            : "false"
+                                        }
+                                      />
+                                    )}
+                                    {menuSpecials["menuTwoCheckIcon"]?.includes(
+                                      rowText
+                                    ) && (
+                                      <CheckIcon
+                                        sx={{
+                                          color: "white",
+                                          cursor: "pointer",
+                                          width: "13px",
+                                        }}
                                       />
                                     )}
                                   </div>
@@ -241,6 +290,13 @@ const MenuPopperTwo = React.memo(
                                 {mTwoGroupItem?.map((rowText, i) => (
                                   <div key={i}>
                                     <p
+                                      aria-disabled={
+                                        menuSpecials[
+                                          "menuTwoDisabled"
+                                        ]?.includes(mTwoGroupItem[0])
+                                          ? "true"
+                                          : "false"
+                                      }
                                       className={i == 1 ? "listText" : " "}
                                       key={i}
                                     >
@@ -266,6 +322,5 @@ const MenuPopperTwo = React.memo(
 );
 
 MenuPopperTwo.displayName = "MenuPopperTwo";
-
 
 export default MenuPopperTwo;

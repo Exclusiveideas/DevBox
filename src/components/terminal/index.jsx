@@ -153,7 +153,6 @@ const TerminalComponent = () => {
         break;
       case "compile":
         if (activeFileValRef.current) {
-          console.log(getSelectedFile())
           term.writeln("> Compiling Active File");
           sendCompileCommand(activeFileValRef.current);
         } else {

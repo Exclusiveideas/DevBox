@@ -6,13 +6,13 @@ import {
   MenuItem,
   MenuList,
   Paper,
-  Popper,
+  Popper, 
 } from "@mui/material";
-import { optionBarMenuOptOne, topBarMenuOptOne } from "@/utils/constants";
+import { menuSpecials, optionBarMenuOptOne, topBarMenuOptOne } from "@/utils/constants";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { appStore } from "@/store/appStore";
 
-const MenuPopperOne = React.memo(({ anchorRefOne, menuSpecials, pos }) => {
+const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
   const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
   const updateTopBarMenuTwo = appStore((state) => state.updateTopBarMenuTwo); // global state
@@ -72,12 +72,26 @@ const MenuPopperOne = React.memo(({ anchorRefOne, menuSpecials, pos }) => {
   const handleMenuOneItemClick = (e) => {
     setClickedMenuOneItem(`${e?.target?.outerText}`);
     if (pos == "optionbar") handleOpenMenuTwo();
-    else if (pos == "topbar" && e?.target?.outerText == "Editor")
-      handleOpenMenuTwo();
-    else if (pos == "topbar" && e?.target?.outerText != "Editor")
-      closeMenuTwo();
-    else return;
+    else if (pos == "topbar") handleTopBarMenuOneClick(e?.target?.outerText);
+    // else if (pos == "topbar" && e?.target?.outerText != "Editor")
+    //   closeMenuTwo();
+    // else return;
   };
+
+  const handleTopBarMenuOneClick = (outerText) => {
+    switch (outerText) {
+      case "Editor":
+        handleOpenMenuTwo();
+        break;
+      case "Documentation":
+        closeMenuTwo();
+        const newWindow = window.open('https://github.com/Exclusiveideas/DevBox', '_blank', 'noopener,noreferrer');
+        if (newWindow) newWindow.opener = null
+        break;
+      default:
+        return;
+    }
+  }
 
   // Menu-Two fxxn end
 
@@ -156,7 +170,15 @@ const MenuPopperOne = React.memo(({ anchorRefOne, menuSpecials, pos }) => {
                     }}
                     key={i}
                   >
-                    {popOpt}
+                    <p
+                      aria-disabled={
+                        menuSpecials["menuOneDisabled"]?.includes(popOpt)
+                          ? "true"
+                          : "false"
+                      }
+                    >
+                      {popOpt}
+                    </p>
                     {pos == "optionbar" && (
                       <ChevronRightIcon
                         sx={{

@@ -1,9 +1,9 @@
 "use client";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EditorBackDrop from "../editorBackdrop";
-import { editorThemes } from "@/utils/editorContants";
+import { editorThemes, getActiveFileExt } from "@/utils/editorConstants";
 import { appStore } from "@/store/appStore";
 import "./editor.css";
 import {
@@ -14,30 +14,27 @@ import {
   getSelectedFile,
 } from "@litecode-ide/virtual-file-system";
 import "@litecode-ide/virtual-file-system/dist/style.css";
-// import TerminalComponent from "../terminal";
 import { debounce } from "@/utils/functions";
 import dynamic from "next/dynamic";
 
-const TerminalComponent = dynamic(() => import('../terminal'), { ssr: false });
-
+const TerminalComponent = dynamic(() => import("../terminal"), { ssr: false });
 
 const EditorComp = () => {
   const monaco = useMonaco();
   const { theme } = appStore((state) => state.editorOpts); // global state
+  // const { open: terminalOpen } = appStore((state) => state.terminal); // global state
   const { value: activeFileValue } = appStore((state) => state.activeFile); // global state
-  const updateActiveFileValue = appStore(
-    (state) => state.updateActiveFileValue
-  );
- 
+  const updateActiveFile = appStore((state) => state.updateActiveFile);
+  const [terminalOpen, setTerminalOpen] = useState(() => appStore((state) => state.terminal))
 
   const handleEditorChange = (value) => {
     // change this such that it updates change after 30seconds
-    updateActiveFileValue({
+    updateActiveFile({
       value: value,
     });
 
-    if(!getSelectedFile()) return // no active file
-    
+    if (!getSelectedFile()) return; // no active file
+
     // Debounced function to update file content
     const debouncedSave = debounce(() => {
       updateFile(getSelectedFile(), value);
@@ -112,16 +109,25 @@ const EditorComp = () => {
       },
     });
 
-
     // add the newly defined themes to the list of registered Themes
     editorThemes?.push("ace");
   }, [monaco, theme]);
 
-  const updateFileValue = (fileValue) => {
-    updateActiveFileValue({
+  useEffect(() => {
+    const fileId = getSelectedFile();
+    updateFileValue(fileId, getFileContents(fileId));
+  }, []);
+
+  const updateFileValue = (id, fileValue) => {
+    const fileExt = getActiveFileExt(id) || "";
+
+    updateActiveFile({
       value: fileValue,
+      ext: fileExt,
     });
   };
+
+  console.log("termiopen: ", terminalOpen);
 
   const getFileContents = (id) => {
     if (id === "") {
@@ -136,11 +142,14 @@ const EditorComp = () => {
     <div className="EditorCompWrapper">
       <div className="TablistWrapper">
         <TabsList
-          onTabClick={(id) => updateFileValue(getFileContents(id))}
+          onTabClick={(id) => updateFileValue(id, getFileContents(id))}
           onTabClose={() => {
-            updateFileValue(getFileContents(getSelectedFile()));
+            updateFileValue(
+              getSelectedFile(),
+              getFileContents(getSelectedFile())
+            );
           }}
-          containerClassName='min-h-max gap-4'
+          containerClassName="min-h-max gap-4"
           tabClassName="min-h-max w-30 p-10px text-xs mr-10px"
         />
         <Breadcrumbs
@@ -158,9 +167,11 @@ const EditorComp = () => {
         />
         <EditorBackDrop />
       </div>
-      <div className="terminalWrapper">
-        <TerminalComponent />
-      </div>
+      {terminalOpen.open && (
+        <div className="terminalWrapper">
+          <TerminalComponent />
+        </div>
+      )}
     </div>
   );
 };
