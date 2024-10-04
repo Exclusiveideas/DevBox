@@ -38,10 +38,12 @@ export const appStore = create(zukeeper((set) => ({
     })),
     activeFile: {
         value: null,
-        ext: ''
+        ext: '',
+        language: '',
+        languageName: ''
     },
-    updateActiveFile: ({value, ext}) => set((state) => ({
-        activeFile: {...state.activeFile, value, ext}
+    updateActiveFile: ({value, ext, language, languageName}) => set((state) => ({
+        activeFile: {...state.activeFile, value, ext, language, languageName}
     })),
     previewTab: {
         open: false,

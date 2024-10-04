@@ -3,11 +3,12 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import EditorBackDrop from "../editorBackdrop";
-import { editorThemes, getActiveFileExt } from "@/utils/editorConstants";
+import { editorThemes, getActiveFileProps } from "@/utils/editorConstants";
 import { appStore } from "@/store/appStore";
+import CloseIcon from "@mui/icons-material/Close";
 import "./editor.css";
 import {
-  Breadcrumbs,
+  // Breadcrumbs,
   TabsList,
   getFileTree,
   updateFile,
@@ -21,23 +22,27 @@ const TerminalComponent = dynamic(() => import("../terminal"), { ssr: false });
 
 const EditorComp = () => {
   const monaco = useMonaco();
-  const { theme } = appStore((state) => state.editorOpts); // global state
-  // const { open: terminalOpen } = appStore((state) => state.terminal); // global state
-  const { value: activeFileValue } = appStore((state) => state.activeFile); // global state
+  const editorOpts = appStore((state) => state.editorOpts); // global state
+  const { open: terminalOpen } = appStore((state) => state.terminal); // global state
+  const activeFile = appStore((state) => state.activeFile); // global state
   const updateActiveFile = appStore((state) => state.updateActiveFile);
-  const [terminalOpen, setTerminalOpen] = useState(() => appStore((state) => state.terminal))
+  const updateTerminal = appStore((state) => state.updateTerminal);
 
   const handleEditorChange = (value) => {
-    // change this such that it updates change after 30seconds
-    updateActiveFile({
+    
+    updateActiveFile({ ...activeFile, 
       value: value,
     });
 
-    if (!getSelectedFile()) return; // no active file
+
+    if (!getSelectedFile()) {
+      return; // no active file
+    }
 
     // Debounced function to update file content
     const debouncedSave = debounce(() => {
-      updateFile(getSelectedFile(), value);
+      const selectedFile = getSelectedFile()
+      if(selectedFile) updateFile(getSelectedFile(), value);
     }, 1000); // 1 sec delay
 
     // Trigger the debounced function
@@ -45,10 +50,13 @@ const EditorComp = () => {
   };
 
   useEffect(() => {
-    if (!monaco) return;
+    if (!monaco) {  
+     // monaco wasn't initialized
+      return;
+    }
 
     // set default theme
-    if (theme) monaco.editor.setTheme(theme);
+    if (editorOpts?.theme) monaco.editor.setTheme(editorOpts?.theme);
 
     monaco.editor.defineTheme("ace", {
       base: "vs",
@@ -111,7 +119,7 @@ const EditorComp = () => {
 
     // add the newly defined themes to the list of registered Themes
     editorThemes?.push("ace");
-  }, [monaco, theme]);
+  }, [monaco, editorOpts?.theme]);
 
   useEffect(() => {
     const fileId = getSelectedFile();
@@ -119,15 +127,26 @@ const EditorComp = () => {
   }, []);
 
   const updateFileValue = (id, fileValue) => {
-    const fileExt = getActiveFileExt(id) || "";
+    if (!id) {
+      updateActiveFile({ 
+        value: null,
+        ext: '',
+        language: '',
+        languageName: '' 
+      });
+
+      return;
+    }
+
+    const fileExt = getActiveFileProps(id) || "";
 
     updateActiveFile({
       value: fileValue,
-      ext: fileExt,
+      ext: fileExt?.ext,
+      language: fileExt?.language,
+      languageName: fileExt?.languageName,
     });
   };
-
-  console.log("termiopen: ", terminalOpen);
 
   const getFileContents = (id) => {
     if (id === "") {
@@ -136,6 +155,12 @@ const EditorComp = () => {
 
     const file = Object.values(getFileTree()).find(({ id: _id }) => _id === id);
     return file ? file.content : undefined;
+  };
+
+  const closeTerminal = () => {
+    updateTerminal({
+      open: false,
+    });
   };
 
   return (
@@ -152,26 +177,47 @@ const EditorComp = () => {
           containerClassName="min-h-max gap-4"
           tabClassName="min-h-max w-30 p-10px text-xs mr-10px"
         />
-        <Breadcrumbs
+        {/* <Breadcrumbs
           onBreadcrumbFileClick={(id) => updateFileValue(getFileContents(id))}
-        />
+        /> */}
       </div>
-      <div className="monacoEditorWrapper">
-        <Editor
-          height="100%"
-          defaultLanguage="javascript"
-          defaultValue={""}
-          value={activeFileValue}
-          theme="vs-dark"
-          onChange={handleEditorChange}
-        />
-        <EditorBackDrop />
-      </div>
-      {terminalOpen.open && (
-        <div className="terminalWrapper">
-          <TerminalComponent />
+      <div className="containerDiv">
+        <div
+          className="monacoEditorWrapper"
+          style={{ height: terminalOpen ? "70%" : "100%" }}
+        >
+          <Editor
+            height="100%"
+            defaultLanguage="javascript"
+            defaultValue={""}
+            value={activeFile?.value}
+            theme="vs-dark"
+            onChange={handleEditorChange}
+            language={`${activeFile?.language}`}
+          />
+          <EditorBackDrop />
         </div>
-      )}
+        {terminalOpen && (
+          <div className="terminalWrapper">
+            <div className="closeTermDiv">
+              <div className="titleWrapper terminal">
+                <p>Preview Tab</p>
+                <CloseIcon
+                  sx={{
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                  }}
+                  onClick={closeTerminal}
+                />
+              </div>
+            </div>
+            <div className="terminalDiv">
+              <TerminalComponent />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

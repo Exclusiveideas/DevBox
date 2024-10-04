@@ -13,7 +13,6 @@ import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
 import { appStore } from "@/store/appStore";
 
 
-
 const OptionBar = () => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
   const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne);

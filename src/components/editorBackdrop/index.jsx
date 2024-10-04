@@ -18,8 +18,6 @@ const EditorBackDrop = () => {
   const handleItemClick = (e) => {
     const selectedTheme = e?.target.textContent;
 
-    console.log("selectedTheme...", selectedTheme);
-
     if (["light", "vs-dark"].includes(selectedTheme)) {
       updateEditorTheme({
         theme: selectedTheme,

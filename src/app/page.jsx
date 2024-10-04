@@ -6,11 +6,12 @@ import OptionBar from "@/pageSections/optionsbar";
 import StructureBar from "@/pageSections/structurebar";
 import EditorBar from "@/pageSections/editorbar";
 import PreviewTab from "@/pageSections/previewTab";
-import { appStore } from "@/store/appStore";
 import { SplitView } from "@/components/splitView/splitView";
+import { appStore } from "@/store/appStore";
+import { useState } from "react";
 
 export default function Home() {
-  const previewTab = appStore((state) => state.previewTab);
+  const { open: openPreviewTab } = appStore((state) => state.previewTab);
 
   return (
     <main className={styles.main}>
@@ -19,11 +20,21 @@ export default function Home() {
         <OptionBar className={styles.optionBar} />
         <StructureBar className={styles.structureBar} />
         <div className={styles.editPrevDiv}>
-          {previewTab.open ? (
-            <SplitView left={<EditorBar />} right={<PreviewTab />} />
-          ) : (
-            <EditorBar />
-          )}
+          <SplitView
+            left={
+              <div className={styles.editorBarWrapper}>
+                <EditorBar />
+              </div>
+            }
+            right={
+              <>
+                {openPreviewTab && (<div className={styles.previewTabWrapper}>
+                  <PreviewTab />
+                </div>
+                )}
+              </>
+            }
+          />
         </div>
       </div>
     </main>

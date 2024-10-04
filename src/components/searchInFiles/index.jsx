@@ -8,7 +8,7 @@ import {
 } from "@litecode-ide/virtual-file-system";
 import "@litecode-ide/virtual-file-system/dist/style.css";
 import { appStore } from "@/store/appStore";
-import { getActiveFileExt } from "@/utils/editorConstants";
+import { getActiveFileProps } from "@/utils/editorConstants";
 
 const SearchInFiles = () => {
   const updateActiveFile = appStore(
@@ -25,11 +25,16 @@ const SearchInFiles = () => {
   };
 
   const handleSearchResultClick = (id) => {
-    const fileExt = getActiveFileExt(id) || '';
+    if(!id) return
+    const fileExt = getActiveFileProps(id) || "";
+
     updateActiveFile({
       value: getFileContents(id),
-      ext: fileExt,
+      ext: fileExt?.ext,
+      language: fileExt?.language,
+      languageName: fileExt?.languageName
     });
+    
   };
 
   return (

@@ -215,8 +215,3 @@ const TerminalComponent = () => {
 };
 
 export default TerminalComponent;
-
-
-// console.log("Hello World")
-// const sum = (a,b) => a + b
-// console.log(sum(2,3))

@@ -219,45 +219,55 @@ export const compileLanguageOptions = [
 ];
 
 export const editorFileLanguage = [
-  { ext: "js", name: "JavaScript" },
-  { ext: "ts", name: "TypeScript" },
-  { ext: "py", name: "Python" },
-  { ext: "java", name: "Java" },
-  { ext: "cs", name: "C#" },
-  { ext: "cpp", name: "C++" },
-  { ext: "php", name: "PHP" },
-  { ext: "go", name: "Go" },
-  { ext: "rb", name: "Ruby" },
-  { ext: "swift", name: "Swift" },
-  { ext: "rs", name: "Rust" },
-  { ext: "html", name: "HTML" },
-  { ext: "css", name: "CSS" },
-  { ext: "json", name: "JSON" },
-  { ext: "yaml", name: "YAML" },
-  { ext: "md", name: "Markdown" },
-  { ext: "sql", name: "SQL" },
-  { ext: "sh", name: "Shell scripting (bash)" },
-  { ext: "xml", name: "XML" },
-  { ext: "r", name: "R" },
-  { ext: "coffee", name: "CoffeeScript" },
-  { ext: "graphql", name: "GraphQL" },
-  { ext: "less", name: "LESS (CSS Preprocessor)" },
-  { ext: "scss", name: "SCSS (CSS Preprocessor)" },
-  { ext: "json", name: "JSON" },
-  { ext: "jsx", name: "JSX (JavaScript XML)" },
-  { ext: "tsx", name: "TSX (TypeScript XML)" },
+  { ext: "js", name: "JavaScript", value: "javascript" },
+  { ext: "ts", name: "TypeScript", value: "typescript" },
+  { ext: "py", name: "Python", value: "python" },
+  { ext: "java", name: "Java", value: "java" },
+  { ext: "cs", name: "C#", value: "csharp" },
+  { ext: "cpp", name: "C++", value: "cpp" },
+  { ext: "php", name: "PHP", value: "php" },
+  { ext: "go", name: "Go", value: "go" },
+  { ext: "rb", name: "Ruby", value: "ruby" },
+  { ext: "swift", name: "Swift", value: "swift" },
+  { ext: "rs", name: "Rust", value: "rust" },
+  { ext: "html", name: "HTML", value: "html" },
+  { ext: "css", name: "CSS", value: "css" },
+  { ext: "json", name: "JSON", value: "json" },
+  { ext: "yaml", name: "YAML", value: "yaml" },
+  { ext: "md", name: "Markdown", value: "md" },
+  { ext: "sql", name: "SQL", value: "sql" },
+  { ext: "sh", name: "Shell scripting (bash)", value: "bash" },
+  { ext: "xml", name: "XML", value: "xml" },
+  { ext: "r", name: "R", value: "r" },
+  { ext: "coffee", name: "CoffeeScript", value: "coffeescript" },
+  { ext: "graphql", name: "GraphQL", value: "graphql" },
+  { ext: "less", name: "LESS (CSS Preprocessor)", value: "less" },
+  { ext: "scss", name: "SCSS (CSS Preprocessor)", value: "scss" },
+  { ext: "jsx", name: "JSX (JavaScript XML)", value: "jsx" },
+  { ext: "tsx", name: "TSX (TypeScript XML)", value: "tsx" },
 ];
 
-export const getActiveFileExt = (id) => {
+export const getActiveFileProps = (id) => {
   const fileTree = getFileTree();
+  let returnObj = {
+    ext: '',
+    languageName: '',
+    language: ''
+  }
 
   for (let key in fileTree) {
     if (fileTree[key]?.id == id) {
       const split = key.split(".");
 
-      return split[1];
+      returnObj.ext = split[1];
     }
   }
 
-  return undefined
+  for(let i = 0; i < editorFileLanguage?.length; i++) {
+    if(editorFileLanguage[i].ext == returnObj?.ext) {
+      returnObj = {...returnObj, languageName: editorFileLanguage[i]?.name, language: editorFileLanguage[i]?.value}
+    }
+  }
+
+  return returnObj
 };

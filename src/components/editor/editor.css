@@ -5,20 +5,35 @@
     overflow: hidden;
     flex: 1;
     width: 100%;
+    box-sizing: border-box;
+    justify-content: space-around;
 }
 
 .TablistWrapper {
-    height: 7%;
-    max-height: max-content;
-    padding: .3rem 1rem;
+    height: max-content;
+    padding: 0 1rem;
 }
 
+.containerDiv {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 .monacoEditorWrapper {
-    flex: 1;
+    /* flex: 0.8; */
 }
 
 .terminalWrapper {
     height: 30%;
     box-sizing: border-box;
+    overflow: hidden;
+}
+
+.closeTermDiv {
+    border-bottom: 1px solid #696969;
+}
+
+
+.terminalDiv {
     overflow: auto;
 }

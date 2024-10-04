@@ -1,15 +1,14 @@
 "use client"
 
 
-import React, { useState } from "react";
+import React from "react";
 import "./topbar.css";
 import Image from "next/image";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
 import { appStore } from "@/store/appStore";
 import { editorFileLanguage } from "@/utils/editorConstants";
-
-
+import dynamic from "next/dynamic";
 
 
 
@@ -23,8 +22,6 @@ const menuSpecials = {
 
 
 const TopBar = () => {
-  const [languageSelect, setLanguageSelect] = useState('JavaScript')
-
   
   const activeFile = appStore((state) => state.activeFile) // global state
   const menuPopperOpts = appStore((state) => state.menuPopperOpts) // global state
@@ -49,19 +46,6 @@ const TopBar = () => {
     prevOpen.current = openMenuPopperOne;
   }, [openMenuPopperOne]);
 
-
-  React.useEffect(() => {
-    if(activeFile?.ext == '') {
-      setLanguageSelect('unrecognized')
-      return
-    }
-    for(let i = 0; i < editorFileLanguage?.length; i++) {
-      if(editorFileLanguage[i].ext == [activeFile?.ext]) {
-        setLanguageSelect(editorFileLanguage[i]?.name)
-        return
-      }
-    }
-  }, [activeFile])
   
 
   return (
@@ -86,7 +70,7 @@ const TopBar = () => {
       </div>
       <div className="topbarMidCont">
         <div className="languageBox">
-          <p>DevBox / {languageSelect}</p>
+          <p>DevBox / {activeFile?.languageName}</p>
         </div>
       </div>
       <div className="topbarRightCont">
