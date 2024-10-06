@@ -51,7 +51,7 @@ export const appStore = create(zukeeper((set) => ({
         activeFile: {...state.activeFile, value, ext, language, languageName}
     })),
     previewTab: {
-        open: true,
+        open: false,
         renderContent: ''
     },
     updatePreviewTab: ({open, renderContent}) => set((state) => ({
