@@ -10,18 +10,16 @@ import { SplitView } from "@/components/splitView/splitView";
 import { appStore } from "@/store/appStore";
 import React, { useState, useRef } from "react";
 import { Steps } from "intro.js-react";
-import "intro.js/introjs.css"
-import {
-  getFileTree,
-} from "@litecode-ide/virtual-file-system";
+import "intro.js/introjs.css";
+import { getFileTree } from "@litecode-ide/virtual-file-system";
 
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 
 const INTIALTOURSTEP = 0;
 const TOURSTEPS = [
@@ -47,11 +45,13 @@ const TOURSTEPS = [
   },
   {
     element: ".githubIcon",
-    intro: "Click here to create a git repository for your app  <span>[⚠️ Feature Not Available yet]</span>",
+    intro:
+      "Click here to create a git repository for your app  <span>[⚠️ Feature Not Available yet]</span>",
   },
   {
     element: ".topbarSignIn",
-    intro: "Click here to create an account <span>[⚠️ Feature not available yet]</span> ",
+    intro:
+      "Click here to create an account <span>[⚠️ Feature not available yet]</span> ",
   },
 ];
 
@@ -62,10 +62,9 @@ const isEmpty = (obj) => {
 export default function Home() {
   const [stepsVisible, setStepsVisible] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const pausedStep = useRef(INTIALTOURSTEP)
-  const fileSystemEmpty = isEmpty(getFileTree())
+  const pausedStep = useRef(INTIALTOURSTEP);
+  const fileSystemEmpty = isEmpty(getFileTree());
 
-  
   const handleDialogOpen = () => {
     setDialogOpen(true);
   };
@@ -81,7 +80,7 @@ export default function Home() {
   };
 
   const onExit = () => {
-    setStepsVisible(false)
+    setStepsVisible(false);
   };
 
   const onBeforeExit = async (e) => {
@@ -162,26 +161,19 @@ const Page = () => {
           <div className={styles.editorBarWrapper}>
             <EditorBar />
           </div>
-          <div className={styles.splitWrapper}>
-            <SplitView
-            left={<></>}
-            right={
-              <>
-                {openPreviewTab && (
-                  <div className={styles.previewTabWrapper}>
-                    <PreviewTab />
-                  </div>
-                )}
-              </>
-            }
-          />
-          </div>
-          
-          {/* {openPreviewTab && (
-            <div className={styles.previewTabWrapper}>
-              <PreviewTab />
+          {openPreviewTab && (
+            <div className={styles.splitWrapper}>
+              <SplitView
+                right={
+                  <>
+                    <div className={styles.previewTabWrapper}>
+                      <PreviewTab />
+                    </div>
+                  </>
+                }
+              />
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </main>

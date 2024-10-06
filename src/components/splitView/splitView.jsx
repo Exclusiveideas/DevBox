@@ -29,7 +29,7 @@ const RightPane = ({ children, rightWidth, openPreviewTab }) => {
   );
 };
 
-export const SplitView = ({ left, right, className }) => {
+export const SplitView = ({ right, className }) => {
   const [rightWidth, setRightWidth] = useState();
   const [dragging, setDragging] = useState(false);
   const splitPaneRef = createRef();
@@ -42,7 +42,7 @@ export const SplitView = ({ left, right, className }) => {
     setRightWidth(Math.floor((2 * splitPaneWidth) / 3));
     MIN_WIDTH = Math.floor(splitPaneWidth / 3);
     MAX_RIGHT_WIDTH = splitPaneWidth;
-    
+
   }, [splitPaneRef.current]);
 
   const onMouseDown = (e) => {
