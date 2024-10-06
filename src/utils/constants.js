@@ -181,3 +181,83 @@ export const menuSpecials = {
   ],
   menuOneDisabled: ["Sign In"],
 };
+
+export const PREVIEWTAB_DEMO = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Render HTML File</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, rgba(255, 0, 102, 0.571), rgba(255, 255, 153, 0.664), #1E1E1E, #0D0D0D);
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%; /* Changed from 100% to 90% for better responsiveness */
+      margin: 20px; /* Added margin for spacing on small screens */
+    }
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 16px;
+      color: #666;
+    }
+    .action {
+      font-size: 13px;
+      color: rgba(166, 7, 7, 0.712);
+    }
+    /* Media queries for responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      p {
+        font-size: 14px;
+      }
+      .action {
+        font-size: 12px;
+      }
+    }
+    @media (max-width: 400px) {
+      .container {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      p {
+        font-size: 12px;
+      }
+      .action {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Render One of Your HTML Files Here</h1>
+    <p>You are currently rendering an empty .html file</p>
+    <p class="action">Please select or upload an HTML file to render its content on this page.</p>
+  </div>
+</body>
+</html>
+`;

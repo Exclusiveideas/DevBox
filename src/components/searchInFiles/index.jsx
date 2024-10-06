@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./searchInFiles.css";
 
 import {
@@ -9,8 +9,12 @@ import {
 import "@litecode-ide/virtual-file-system/dist/style.css";
 import { appStore } from "@/store/appStore";
 import { getActiveFileProps } from "@/utils/editorConstants";
+import { useMonaco } from "@monaco-editor/react";
 
 const SearchInFiles = () => {
+  const monaco = useMonaco();
+  const updateVfsSearch = appStore((state) => state.updateVfsSearch); // global state
+
   const updateActiveFile = appStore(
     (state) => state.updateActiveFile
   );
@@ -24,9 +28,14 @@ const SearchInFiles = () => {
     return file ? file.content : undefined;
   };
 
-  const handleSearchResultClick = (id) => {
+  const handleSearchResultClick = (id, line) => {
     if(!id) return
     const fileExt = getActiveFileProps(id) || "";
+
+    updateVfsSearch({
+      searchItemClick: true,
+      searchLine: line
+    })
 
     updateActiveFile({
       value: getFileContents(id),
@@ -34,15 +43,20 @@ const SearchInFiles = () => {
       language: fileExt?.language,
       languageName: fileExt?.languageName
     });
+
+    // editor.setSelection(new monaco.Selection(1,2,1,2));
+    // editor.focus();
     
   };
 
+
+  
   return (
-    <div>
-      <SearchInput className="bg-neutral-500 text-neutral-300 hover:bg-neutral-600 active:bg-neutral-600 focus:bg-neutral-600" />
-      <div className="flex flex-col h-full w-1/4">
+    <div className="searchResCont">
+      <SearchInput className="text-xs p-0.4 bg-neutral-500 text-neutral-300 hover:bg-neutral-600 active:bg-neutral-600 focus:bg-neutral-600" />
+      <div className="searchResWrapper flex flex-col h-full w-1/4">
         <SearchResults
-          searchResultClicked={(id, line) => handleSearchResultClick(id)}
+          searchResultClicked={(id, line) => handleSearchResultClick(id, line)}
         />
       </div>
     </div>

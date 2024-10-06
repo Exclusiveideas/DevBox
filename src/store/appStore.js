@@ -5,12 +5,17 @@ export const appStore = create(zukeeper((set) => ({
     editorOpts: {
         openBackdrop: false,
         theme: '',
+        searchItemClick: false,
+        searchLine: null
     },
     updateEditorBackdrop: ({openBackdrop}) => set((state) => ({
         editorOpts: {...state.editorOpts, openBackdrop}
     })),
     updateEditorTheme: ({ theme }) => set((state) => ({
         editorOpts: {...state.editorOpts, theme}
+    })),
+    updateVfsSearch: ({ searchItemClick, searchLine }) => set((state) => ({
+        editorOpts: {...state.editorOpts, searchItemClick, searchLine}
     })),
     menuPopperOpts: {
         openTopBarMenuOne: false,
@@ -46,7 +51,7 @@ export const appStore = create(zukeeper((set) => ({
         activeFile: {...state.activeFile, value, ext, language, languageName}
     })),
     previewTab: {
-        open: false,
+        open: true,
         renderContent: ''
     },
     updatePreviewTab: ({open, renderContent}) => set((state) => ({

@@ -4,7 +4,6 @@
     flex-direction: column;
     background-color: white;
     display: flex;
-    border: 3px solid yellow;
     width: 100%;
 }
 
@@ -25,7 +24,7 @@
     border-bottom: none;
     width: 140px;
     gap: .5rem;
-    height: 30px;
+    height: 100%;
 }
 
 .titleWrapper > p {
@@ -42,5 +41,4 @@
 .previewRenderCont {
     width: 100%;
     flex: 1;
-    border: 2px solid blue;
 }

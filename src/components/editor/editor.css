@@ -37,3 +37,16 @@
 .terminalDiv {
     overflow: auto;
 }
+
+
+.myInlineDecoration {
+	color: white !important;
+	cursor: pointer;
+	background-color: #679177;
+}
+
+.myLineDecoration {
+	background: #679177;
+	width: 5px !important;
+	margin-left: 3px;
+}

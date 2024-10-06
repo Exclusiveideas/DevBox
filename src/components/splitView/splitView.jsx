@@ -2,62 +2,48 @@
 
 import React, { createRef, useEffect, useState } from "react";
 import "./splitView.css";
-import { appStore } from "@/store/appStore";
 
-const MIN_WIDTH = 75;
-const DEFAULT_LEFT_WIDTH = 800;
-const MAX_LEFT_WIDTH = 1000;
+let MIN_WIDTH;
+let MAX_RIGHT_WIDTH;
 
-const LeftPane = ({ children, leftWidth, openPreviewTab }) => {
-  const leftRef = createRef();
 
-  useEffect(() => {
-    if (leftRef.current) {
-      const width =
-        leftWidth >= MAX_LEFT_WIDTH
-          ? MAX_LEFT_WIDTH
-          : leftWidth <= MIN_WIDTH
-          ? MIN_WIDTH
-          : leftWidth;
-          
-      if(openPreviewTab) {
-        leftRef.current.style.width = `${width}px`;
-      } else {
-        leftRef.current.style.width = '100%'
-      }
-    }
-  }, [leftWidth, openPreviewTab]);
-
-  return (
-    <div ref={leftRef} style={{ height: "100%" }}>
-      {children}
-    </div>
-  );
-};
-
-const RightPane = ({ children, leftWidth, openPreviewTab }) => {
+const RightPane = ({ children, rightWidth, openPreviewTab }) => {
   const rightRef = createRef();
 
   useEffect(() => {
-    if (rightRef.current) {
-      rightRef.current.style.width = `calc(100% - 4px - ${leftWidth}px)`;
-    }
-  }, [leftWidth, openPreviewTab]);
+    if (!rightRef.current || !MIN_WIDTH || !MAX_RIGHT_WIDTH) return;
+    const width =
+      (rightWidth <= MIN_WIDTH
+        ? MIN_WIDTH
+        : rightWidth);
+    
+    console.log("w: ", width);
+
+    rightRef.current.style.width = `${width}px`;
+  }, [rightWidth, openPreviewTab]);
 
   return (
-    <div ref={rightRef} style={{ height: "100%", minWidth: "250px" }}>
+    <div ref={rightRef} style={{ height: "100%" }}>
       {children}
     </div>
   );
 };
 
 export const SplitView = ({ left, right, className }) => {
-  const [leftWidth, setLeftWidth] = useState(DEFAULT_LEFT_WIDTH);
+  const [rightWidth, setRightWidth] = useState();
   const [dragging, setDragging] = useState(false);
   const splitPaneRef = createRef();
 
-  const { open: openPreviewTab } = appStore((state) => state.previewTab);
-  
+  useEffect(() => {
+    if (!splitPaneRef.current) return;
+
+    const splitPaneWidth = splitPaneRef.current?.clientWidth;
+
+    setRightWidth(Math.floor((2 * splitPaneWidth) / 3));
+    MIN_WIDTH = Math.floor(splitPaneWidth / 3);
+    MAX_RIGHT_WIDTH = splitPaneWidth;
+    
+  }, [splitPaneRef.current]);
 
   const onMouseDown = (e) => {
     setDragging(true);
@@ -66,15 +52,15 @@ export const SplitView = ({ left, right, className }) => {
   const onMouseMove = (e) => {
     if (dragging && splitPaneRef.current) {
       const splitPaneWidth = splitPaneRef.current.clientWidth;
-      let newLeftWidth = e.clientX;
+      let newRightWidth = splitPaneWidth - e.clientX;
 
-      if (newLeftWidth < MIN_WIDTH) {
-        newLeftWidth = MIN_WIDTH;
-      } else if (newLeftWidth > splitPaneWidth - MIN_WIDTH) {
-        newLeftWidth = splitPaneWidth - MIN_WIDTH;
+      if (newRightWidth < MIN_WIDTH) {
+        newRightWidth = MIN_WIDTH;
+      } else if (newRightWidth > splitPaneWidth - MIN_WIDTH) {
+        newRightWidth = splitPaneWidth - MIN_WIDTH;
       }
 
-      setLeftWidth(newLeftWidth);
+      setRightWidth(newRightWidth);
     }
   };
 
@@ -83,31 +69,39 @@ export const SplitView = ({ left, right, className }) => {
   };
 
   useEffect(() => {
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+    
+    const handleMouseMoveGlobal = (event) => {
+      if (dragging) {
+        onMouseMove(event);
+      }
+    };
+
+    const handleMouseUpGlobal = () => {
+      if (dragging) {
+        onMouseUp();
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMoveGlobal);
+    window.addEventListener("mouseup", handleMouseUpGlobal);
 
     return () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("mousemove", handleMouseMoveGlobal);
+      window.removeEventListener("mouseup", handleMouseUpGlobal);
     };
   });
 
   return (
     <div className={`splitView ${className ?? ""}`} ref={splitPaneRef}>
-      <LeftPane leftWidth={leftWidth} openPreviewTab={openPreviewTab}>{left}</LeftPane>
-      {openPreviewTab && (
-        <>
-          <div
-            className="divider-hitbox"
-            onMouseDown={onMouseDown}
-            onTouchStart={onMouseDown}
-            onTouchEnd={onMouseUp}
-          >
-            <div className="divider" />
-          </div>
-          <RightPane leftWidth={leftWidth} openPreviewTab={openPreviewTab}>{right}</RightPane>
-        </>
-      )}
+      <div
+        className="divider-hitbox"
+        onMouseDown={onMouseDown}
+      >
+        <div className="divider" />
+      </div>
+      <RightPane rightWidth={rightWidth}>
+        {right}
+      </RightPane>
     </div>
   );
 };

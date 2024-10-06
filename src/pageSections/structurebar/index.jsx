@@ -16,7 +16,7 @@ const StructureBar = () => {
   const { activeOpt } = appStore((state) => state.optionBar); // global state
 
   return (
-    <div className='structurebarDiv'>
+    <div className='structurebarDiv vfs_tour' >
       {activeOpt == 0 && <VFS />}
       {activeOpt == 1 && <SearchInFiles />}
       {activeOpt == 2 && <ConnectGitHub />}

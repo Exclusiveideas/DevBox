@@ -1,7 +1,7 @@
 "use client";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditorBackDrop from "../editorBackdrop";
 import { editorThemes, getActiveFileProps } from "@/utils/editorConstants";
 import { appStore } from "@/store/appStore";
@@ -21,12 +21,17 @@ import dynamic from "next/dynamic";
 const TerminalComponent = dynamic(() => import("../terminal"), { ssr: false });
 
 const EditorComp = () => {
-  const monaco = useMonaco();
   const editorOpts = appStore((state) => state.editorOpts); // global state
   const { open: terminalOpen } = appStore((state) => state.terminal); // global state
   const activeFile = appStore((state) => state.activeFile); // global state
   const updateActiveFile = appStore((state) => state.updateActiveFile);
   const updateTerminal = appStore((state) => state.updateTerminal);
+  
+  const updateVfsSearch = appStore((state) => state.updateVfsSearch); // global state
+
+  const [jumpToLine, setJumpToLine] = useState(0);
+  const [vars, setVars] = useState({});
+  const { monacoEditor, monaco } = vars;
 
   const handleEditorChange = (value) => {
     
@@ -50,10 +55,7 @@ const EditorComp = () => {
   };
 
   useEffect(() => {
-    if (!monaco) {  
-     // monaco wasn't initialized
-      return;
-    }
+    if (!monaco) return;
 
     // set default theme
     if (editorOpts?.theme) monaco.editor.setTheme(editorOpts?.theme);
@@ -163,6 +165,47 @@ const EditorComp = () => {
     });
   };
 
+  useEffect(() => {
+    if (
+      !editorOpts?.searchItemClick ||
+      !editorOpts?.searchLine ||
+      !monacoEditor ||
+      !monaco
+    )
+      return;
+
+
+    setJumpToLine(editorOpts?.searchLine);
+
+
+
+    monacoEditor.createDecorationsCollection([
+      {
+        range: new monaco.Range(editorOpts?.searchLine, 1, editorOpts?.searchLine, 1),
+        options: {
+          isWholeLine: true,
+          linesDecorationsClassName: "myLineDecoration",
+        },
+      },
+      {
+        range: new monaco.Range(editorOpts?.searchLine, 1, editorOpts?.searchLine, 10),
+        options: { isWholeLine: true, inlineClassName: "myInlineDecoration", },
+      },
+    ]);
+
+    updateVfsSearch({
+      searchItemClick: false,
+      searchLine: null,
+    });
+  }, [monacoEditor, monaco, editorOpts?.searchItemClick]);
+    
+
+  async function handleEditorDidMount(monacoEditor, monaco) {
+    setVars({ monacoEditor, monaco });
+  }
+
+
+
   return (
     <div className="EditorCompWrapper">
       <div className="TablistWrapper">
@@ -194,6 +237,8 @@ const EditorComp = () => {
             theme="vs-dark"
             onChange={handleEditorChange}
             language={`${activeFile?.language}`}
+            onMount={handleEditorDidMount}
+            line={jumpToLine}
           />
           <EditorBackDrop />
         </div>

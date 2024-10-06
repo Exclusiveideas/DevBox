@@ -6,7 +6,6 @@ import "@litecode-ide/virtual-file-system/dist/style.css";
 import "./vfs.css";
 import { appStore } from "@/store/appStore";
 import { editorFileExtensions, getActiveFileProps } from "@/utils/editorConstants";
-import ReactDOM from "react-dom";
 
 function VFS() {
   const updateActiveFile = appStore((state) => state.updateActiveFile);

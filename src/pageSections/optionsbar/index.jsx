@@ -50,7 +50,7 @@ const OptionBar = () => {
     <div className="optionsBar">
       <div className="topOptions">
         <div className="optionDiv">
-          <div className="optionIcon">
+          <div className="optionIcon optionBarMenu" data-intro='This provides you with more editor options like creating terminal' data-step={4} >
             <MenuIcon
               ref={anchorRefOne}
               id="menu-one-button"
@@ -95,7 +95,7 @@ const OptionBar = () => {
                 </div>
               )}
               {i == 1 && (
-                <div className="optionIcon">
+                <div className="optionIcon optionbarSearchIcon" data-intro='Click here to search for text(S) in files' data-step={5}>
                   <SearchIcon
                     sx={{
                       color: `${
@@ -109,7 +109,7 @@ const OptionBar = () => {
                 </div>
               )}
               {i == 2 && (
-                <div className="optionIcon">
+                <div className="optionIcon githubIcon">
                   <GitHubIcon
                     sx={{
                       color: `${

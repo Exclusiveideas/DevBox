@@ -69,7 +69,7 @@ const TopBar = () => {
         />
       </div>
       <div className="topbarMidCont">
-        <div className="languageBox">
+        <div data-intro='This shows the current file type you are editing' data-step={2} className="languageBox">
           <p>DevBox / {activeFile?.languageName}</p>
         </div>
       </div>
@@ -80,7 +80,7 @@ const TopBar = () => {
         <div className="topbuttons shareButton">
           <p>Share</p>
         </div>
-        <div className="topbuttons">
+        <div className="topbuttons topbarSignIn" data-intro='[⚠️Feature Not Available yet] Click here to create an account' data-step={7}>
           <p>Sign In</p>
         </div>
       </div>
