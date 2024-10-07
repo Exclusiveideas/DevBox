@@ -106,13 +106,12 @@ export default function Home() {
 
   return (
     <>
-      {width <= breakpoint ? (
+      {width <= breakpoint && (
         <div className={styles.responsive_message}>
-          <p>
-            This app should be viewed on a larger screen
-          </p>
+          <p>This app should be viewed on a larger screen</p>
         </div>
-      ) : (
+      )}
+      {width >= breakpoint && (
         <>
           {fileSystemEmpty && (
             <>
