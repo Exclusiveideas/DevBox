@@ -16,7 +16,10 @@ import { appStore } from "@/store/appStore";
 
 const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
-  const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts); // global state
+  const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
+  const updateTopBarMenuTwo = appStore((state) => state.updateTopBarMenuTwo); // global state
+  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
+  const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
 
   const openMenuPopperOne = //selects either to open the topbarMenu or optionsbarMenu
     pos == "optionbar"
@@ -36,11 +39,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
 
   const handleOpenMenuTwo = () => {
     if (pos == "optionbar") {
-      updateMenuPopperOpts({
+      updateOptBarMenuTwo({
         openOptBarMenuTwo: true,
       });
     } else {
-      updateMenuPopperOpts({
+      updateTopBarMenuTwo({
         openTopBarMenuTwo: true,
       });
     }
@@ -58,11 +61,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
 
   const closeMenuTwo = () => {
     if (pos == "optionbar") {
-      updateMenuPopperOpts({
+      updateOptBarMenuTwo({
         openOptBarMenuTwo: false,
       });
     } else {
-      updateMenuPopperOpts({
+      updateTopBarMenuTwo({
         openTopBarMenuTwo: false,
       });
     }
@@ -98,11 +101,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
     }
 
     if (pos == "optionbar") {
-      updateMenuPopperOpts({
+      updateOptBarMenuOne({
         openOptBarMenuOne: false,
       });
     } else {
-      updateMenuPopperOpts({
+      updateTopBarMenuOne({
         openTopBarMenuOne: false,
       });
     }
@@ -113,11 +116,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
       event.preventDefault();
 
       if (pos == "optionbar") {
-        updateMenuPopperOpts({
+        updateOptBarMenuOne({
           openOptBarMenuOne: false,
         });
       } else {
-        updateMenuPopperOpts({
+        updateTopBarMenuOne({
           openTopBarMenuOne: false,
         });
       }

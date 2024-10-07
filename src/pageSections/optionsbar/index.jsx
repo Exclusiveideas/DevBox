@@ -15,7 +15,7 @@ import { appStore } from "@/store/appStore";
 
 const OptionBar = () => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
-  const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts);
+  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne);
   const openMenuPopperOne = menuPopperOpts?.openOptBarMenuOne;
 
   const { activeOpt } = appStore((state) => state.optionBar); // global state
@@ -24,7 +24,7 @@ const OptionBar = () => {
   const anchorRefOne = useRef(null);
 
   const handleToggleMenuOne = () => {
-    updateMenuPopperOpts({
+    updateOptBarMenuOne({
       openOptBarMenuOne: !openMenuPopperOne,
     });
   };
@@ -50,7 +50,7 @@ const OptionBar = () => {
     <div className="optionsBar">
       <div className="topOptions">
         <div className="optionDiv">
-          <div className="optionIcon optionBarMenu" data-intro='This provides you with more editor options like creating terminal' data-step={4} >
+          <div className="optionIcon optionBarMenu">
             <MenuIcon
               ref={anchorRefOne}
               id="menu-one-button"

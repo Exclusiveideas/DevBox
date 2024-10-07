@@ -14,12 +14,12 @@ const TopBar = () => {
   
   const activeFile = appStore((state) => state.activeFile) // global state
   const { openTopBarMenuOne: openMenuPopperOne } = appStore((state) => state.menuPopperOpts) // global state
-  const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts); // global state
+  const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
 
   const anchorRefOne = React.useRef(null);
   
   const handleToggleMenuOne = () => {
-    updateMenuPopperOpts({
+    updateTopBarMenuOne({
         openTopBarMenuOne: !openMenuPopperOne,
       });
   };
