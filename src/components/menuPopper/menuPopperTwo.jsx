@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import {
@@ -20,17 +20,17 @@ import { appStore } from "@/store/appStore";
 
 const MenuPopperTwo = React.memo(
   ({ anchorRefTwo, clickedMenuOneItem, pos }) => {
-    const updateEditorBackdrop = appStore(
-      (state) => state.updateEditorBackdrop
+    const updateEditorOpts = appStore(
+      (state) => state.updateEditorOpts
     ); // global state
 
     const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
-    const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
-    const updateTopBarMenuTwo = appStore((state) => state.updateTopBarMenuTwo); // global state
-    const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
-    const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
+    const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts); // global state
     const updateActiveOptBar = appStore((state) => state.updateActiveOptBar);
+    const { open: openTerminal } = appStore((state) => state.terminal);
     const updateTerminal = appStore((state) => state.updateTerminal);
+
+    const updateDialogBox = appStore((state) => state.updateDialogBox);
 
     const openMenuPopperOne = //selects either to open the topbarMenu or optionsbarMenu
       pos == "optionbar"
@@ -59,11 +59,11 @@ const MenuPopperTwo = React.memo(
         event.preventDefault();
 
         if (pos == "optionbar") {
-          updateOptBarMenuTwo({
+          updateMenuPopperOpts({
             openOptBarMenuTwo: false,
           });
         } else {
-          updateTopBarMenuTwo({
+          updateMenuPopperOpts({
             openTopBarMenuTwo: false,
           });
         }
@@ -103,6 +103,13 @@ const MenuPopperTwo = React.memo(
           break;
         case "New Terminal":
           closeMenuPopper();
+          if (!openTerminal) {
+            updateDialogBox({
+              open: true,
+              initiator: "terminal",
+            });
+            return;
+          }
           updateTerminal({
             open: true,
           });
@@ -114,21 +121,13 @@ const MenuPopperTwo = React.memo(
     const closeMenuPopper = () => {
       // close menuPoppers
       if (pos == "optionbar") {
-        updateOptBarMenuTwo({
+        updateMenuPopperOpts({
           openOptBarMenuTwo: false,
-        });
-      } else {
-        updateTopBarMenuTwo({
-          openTopBarMenuTwo: false,
-        });
-      }
-
-      if (pos == "optionbar") {
-        updateOptBarMenuOne({
           openOptBarMenuOne: false,
         });
       } else {
-        updateTopBarMenuOne({
+        updateMenuPopperOpts({
+          openTopBarMenuTwo: false,
           openTopBarMenuOne: false,
         });
       }
@@ -136,7 +135,7 @@ const MenuPopperTwo = React.memo(
 
     const selectTheme = () => {
       // opens backdrop
-      updateEditorBackdrop({
+      updateEditorOpts({
         openBackdrop: true,
       });
     };
@@ -145,15 +144,15 @@ const MenuPopperTwo = React.memo(
       //when the first menu closes, close the second
 
       if (pos == "optionbar") {
-        updateOptBarMenuTwo({
+        updateMenuPopperOpts({
           openOptBarMenuTwo: false,
         });
       } else {
-        updateTopBarMenuTwo({
+        updateMenuPopperOpts({
           openTopBarMenuTwo: false,
         });
       }
-    }, [openMenuPopperOne, pos, updateOptBarMenuTwo, updateTopBarMenuTwo]);
+    }, [openMenuPopperOne, pos, updateMenuPopperOpts]);
 
     // ----------end-------
 

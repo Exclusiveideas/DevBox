@@ -10,8 +10,7 @@ const EditorBackDrop = () => {
   const [filteredThemes, setFilteredThemes] = useState(themesList);
 
   const { openBackdrop } = appStore((state) => state.editorOpts);
-  const updateEditorBackdrop = appStore((state) => state.updateEditorBackdrop);
-  const updateEditorTheme = appStore((state) => state.updateEditorTheme);
+  const updateEditorOpts = appStore((state) => state.updateEditorOpts);
 
 
 
@@ -19,19 +18,19 @@ const EditorBackDrop = () => {
     const selectedTheme = e?.target.textContent;
 
     if (["light", "vs-dark"].includes(selectedTheme)) {
-      updateEditorTheme({
+      updateEditorOpts({
         theme: selectedTheme,
       });
     } else {
       defineTheme(selectedTheme).then((_) => {
-        updateEditorTheme({
+        updateEditorOpts({
           theme: selectedTheme,
         });
       })
     }
 
     // close backdrop
-    updateEditorBackdrop({
+    updateEditorOpts({
       openBackdrop: false,
     });
   };

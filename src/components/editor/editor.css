@@ -19,9 +19,6 @@
     flex-direction: column;
     height: 100%;
 }
-.monacoEditorWrapper {
-    /* flex: 0.8; */
-}
 
 .terminalWrapper {
     height: 30%;

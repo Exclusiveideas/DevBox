@@ -16,10 +16,7 @@ import { appStore } from "@/store/appStore";
 
 const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
-  const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
-  const updateTopBarMenuTwo = appStore((state) => state.updateTopBarMenuTwo); // global state
-  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
-  const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
+  const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts); // global state
 
   const openMenuPopperOne = //selects either to open the topbarMenu or optionsbarMenu
     pos == "optionbar"
@@ -39,11 +36,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
 
   const handleOpenMenuTwo = () => {
     if (pos == "optionbar") {
-      updateOptBarMenuTwo({
+      updateMenuPopperOpts({
         openOptBarMenuTwo: true,
       });
     } else {
-      updateTopBarMenuTwo({
+      updateMenuPopperOpts({
         openTopBarMenuTwo: true,
       });
     }
@@ -61,11 +58,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
 
   const closeMenuTwo = () => {
     if (pos == "optionbar") {
-      updateOptBarMenuTwo({
+      updateMenuPopperOpts({
         openOptBarMenuTwo: false,
       });
     } else {
-      updateTopBarMenuTwo({
+      updateMenuPopperOpts({
         openTopBarMenuTwo: false,
       });
     }
@@ -75,9 +72,6 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
     setClickedMenuOneItem(`${e?.target?.outerText}`);
     if (pos == "optionbar") handleOpenMenuTwo();
     else if (pos == "topbar") handleTopBarMenuOneClick(e?.target?.outerText);
-    // else if (pos == "topbar" && e?.target?.outerText != "Editor")
-    //   closeMenuTwo();
-    // else return;
   };
 
   const handleTopBarMenuOneClick = (outerText) => {
@@ -103,11 +97,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
     }
 
     if (pos == "optionbar") {
-      updateOptBarMenuOne({
+      updateMenuPopperOpts({
         openOptBarMenuOne: false,
       });
     } else {
-      updateTopBarMenuOne({
+      updateMenuPopperOpts({
         openTopBarMenuOne: false,
       });
     }
@@ -118,11 +112,11 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
       event.preventDefault();
 
       if (pos == "optionbar") {
-        updateOptBarMenuOne({
+        updateMenuPopperOpts({
           openOptBarMenuOne: false,
         });
       } else {
-        updateTopBarMenuOne({
+        updateMenuPopperOpts({
           openTopBarMenuOne: false,
         });
       }

@@ -9,11 +9,9 @@ import {
 import "@litecode-ide/virtual-file-system/dist/style.css";
 import { appStore } from "@/store/appStore";
 import { getActiveFileProps } from "@/utils/editorConstants";
-import { useMonaco } from "@monaco-editor/react";
 
 const SearchInFiles = () => {
-  const monaco = useMonaco();
-  const updateVfsSearch = appStore((state) => state.updateVfsSearch); // global state
+  const updateEditorOpts = appStore((state) => state.updateEditorOpts); // global state
 
   const updateActiveFile = appStore(
     (state) => state.updateActiveFile
@@ -32,7 +30,7 @@ const SearchInFiles = () => {
     if(!id) return
     const fileExt = getActiveFileProps(id) || "";
 
-    updateVfsSearch({
+    updateEditorOpts({
       searchItemClick: true,
       searchLine: line
     })
@@ -42,11 +40,7 @@ const SearchInFiles = () => {
       ext: fileExt?.ext,
       language: fileExt?.language,
       languageName: fileExt?.languageName
-    });
-
-    // editor.setSelection(new monaco.Selection(1,2,1,2));
-    // editor.focus();
-    
+    });    
   };
 
 

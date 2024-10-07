@@ -1,6 +1,6 @@
 "use client";
 
-import Editor, { useMonaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import EditorBackDrop from "../editorBackdrop";
 import { editorThemes, getActiveFileProps } from "@/utils/editorConstants";
@@ -17,6 +17,7 @@ import {
 import "@litecode-ide/virtual-file-system/dist/style.css";
 import { debounce } from "@/utils/functions";
 import dynamic from "next/dynamic";
+import { ClockLoader as Loader } from "react-spinners";
 
 const TerminalComponent = dynamic(() => import("../terminal"), { ssr: false });
 
@@ -27,7 +28,7 @@ const EditorComp = () => {
   const updateActiveFile = appStore((state) => state.updateActiveFile);
   const updateTerminal = appStore((state) => state.updateTerminal);
   
-  const updateVfsSearch = appStore((state) => state.updateVfsSearch); // global state
+  const updateEditorOpts = appStore((state) => state.updateEditorOpts); // global state
 
   const [jumpToLine, setJumpToLine] = useState(0);
   const [vars, setVars] = useState({});
@@ -166,6 +167,8 @@ const EditorComp = () => {
   };
 
   useEffect(() => {
+    // for higlighting search text on the editor
+    
     if (
       !editorOpts?.searchItemClick ||
       !editorOpts?.searchLine ||
@@ -174,10 +177,7 @@ const EditorComp = () => {
     )
       return;
 
-
     setJumpToLine(editorOpts?.searchLine);
-
-
 
     monacoEditor.createDecorationsCollection([
       {
@@ -193,7 +193,7 @@ const EditorComp = () => {
       },
     ]);
 
-    updateVfsSearch({
+    updateEditorOpts({
       searchItemClick: false,
       searchLine: null,
     });
@@ -225,20 +225,18 @@ const EditorComp = () => {
         /> */}
       </div>
       <div className="containerDiv">
-        <div
-          className="monacoEditorWrapper"
-          style={{ height: terminalOpen ? "70%" : "100%" }}
-        >
+        <div style={{ height: terminalOpen ? "70%" : "100%" }}>
           <Editor
             height="100%"
             defaultLanguage="javascript"
             defaultValue={""}
-            value={activeFile?.value}
+            value={activeFile?.value} 
             theme="vs-dark"
             onChange={handleEditorChange}
             language={`${activeFile?.language}`}
             onMount={handleEditorDidMount}
             line={jumpToLine}
+            loading={<Loader color='white' />}
           />
           <EditorBackDrop />
         </div>
@@ -246,7 +244,7 @@ const EditorComp = () => {
           <div className="terminalWrapper">
             <div className="closeTermDiv">
               <div className="titleWrapper terminal">
-                <p>Preview Tab</p>
+                <p>Terminal</p>
                 <CloseIcon
                   sx={{
                     color: "white",
