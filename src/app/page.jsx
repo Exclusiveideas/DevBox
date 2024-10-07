@@ -15,6 +15,7 @@ import { getFileTree } from "@litecode-ide/virtual-file-system";
 
 import { INTIALTOURSTEP, TOURSTEPS } from "@/utils/constants";
 import DialogBox from "@/components/DialogBox/dialogBox";
+import useWindowSize from "@/utils/hooks/useWindowSize";
 
 
 
@@ -29,9 +30,11 @@ export default function Home() {
   const dialogBox = appStore((state) => state.dialogBox);
   const updateDialogBox= appStore((state) => state.updateDialogBox);
   const updateTourDemo= appStore((state) => state.updateTourDemo);
-  
-
   const stepsRef = useRef()
+
+
+  const { width } = useWindowSize();
+  const breakpoint = 768; 
 
 
   useEffect(() => {
@@ -103,21 +106,31 @@ export default function Home() {
 
   return (
     <>
-      {fileSystemEmpty && (
+      {width <= breakpoint ? (
+        <div className={styles.responsive_message}>
+          <p>
+            This app should be viewed on a larger screen
+          </p>
+        </div>
+      ) : (
         <>
-          <Steps
-            enabled={stepsVisible}
-            steps={TOURSTEPS}
-            initialStep={pausedStep.current}
-            onExit={onExit}
-            onBeforeExit={onBeforeExit}
-            onBeforeChange={onBeforeChange}
-            ref={steps => (stepsRef.current = steps)}
-          />
+          {fileSystemEmpty && (
+            <>
+              <Steps
+                enabled={stepsVisible}
+                steps={TOURSTEPS}
+                initialStep={pausedStep.current}
+                onExit={onExit}
+                onBeforeExit={onBeforeExit}
+                onBeforeChange={onBeforeChange}
+                ref={(steps) => (stepsRef.current = steps)}
+              />
+            </>
+          )}
+          <Page />
+          <DialogBox />
         </>
       )}
-      <Page />
-      <DialogBox />
     </>
   );
 }

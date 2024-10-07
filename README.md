@@ -1,5 +1,5 @@
 # DevBox
-![Screenshot (207)](https://github.com/user-attachments/assets/5dd8982e-561d-4987-a49d-16920e4c59dd)
+![Screenshot (208)](https://github.com/user-attachments/assets/832af665-b770-4404-aa36-a914558f4cbd)
 
 **DevBox** is a powerful web-based code editor designed to support over 20 popular programming languages. With a user-friendly interface, integrated terminal, and the ability to render HTML previews, DevBox aims to enhance your development workflow.
 

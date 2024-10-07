@@ -1,4 +1,3 @@
-
 .main {
   display: flex;
   flex-direction: column;
@@ -49,4 +48,56 @@
   width: 100%;
   flex: 1;
   height: 100%;
+}
+
+
+
+
+
+
+
+
+/* Small device Alert */
+
+.responsive_message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.responsive_message p {
+  font-size: 1.5rem;
+  padding: 1rem;
+  margin: 0;
+
+  
+  color: #333;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .responsive_message p {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive_message p {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
 }
