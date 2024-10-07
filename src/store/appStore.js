@@ -28,21 +28,18 @@ export const appStore = create(
       openOptBarMenuOne: false,
       openOptBarMenuTwo: false,
     },
-    updateMenuPopperOpts: ({
-      openTopBarMenuOne,
-      openTopBarMenuTwo,
-      openOptBarMenuOne,
-      openOptBarMenuTwo,
-    }) =>
-      set((state) => ({
-        menuPopperOpts: {
-          ...state.menuPopperOpts,
-          openTopBarMenuOne,
-          openTopBarMenuTwo,
-          openOptBarMenuOne,
-          openOptBarMenuTwo,
-        },
-      })),
+    updateTopBarMenuOne: ({openTopBarMenuOne}) => set((state) => ({
+        menuPopperOpts: {...state.menuPopperOpts, openTopBarMenuOne}
+    })),
+    updateTopBarMenuTwo: ({openTopBarMenuTwo}) => set((state) => ({
+        menuPopperOpts: {...state.menuPopperOpts, openTopBarMenuTwo}
+    })),
+    updateOptBarMenuOne: ({openOptBarMenuOne}) => set((state) => ({
+        menuPopperOpts: {...state.menuPopperOpts, openOptBarMenuOne}
+    })),
+    updateOptBarMenuTwo: ({openOptBarMenuTwo}) => set((state) => ({
+        menuPopperOpts: {...state.menuPopperOpts, openOptBarMenuTwo}
+    })),
 
     optionBar: {
       activeOpt: 0,
