@@ -77,7 +77,7 @@ const TopBar = () => {
         <div className="userIcon">
           <p>A</p>
         </div>
-        <div className="topbuttons shareButton">
+        <div className="topbuttons shareButton topbarShare">
           <p>Share</p>
         </div>
         <div className="topbuttons topbarSignIn" data-intro='[⚠️Feature Not Available yet] Click here to create an account' data-step={7}>

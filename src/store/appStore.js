@@ -6,7 +6,8 @@ export const appStore = create(zukeeper((set) => ({
         openBackdrop: false,
         theme: '',
         searchItemClick: false,
-        searchLine: null
+        searchLine: null,
+        tourDemo: false,
     },
     updateEditorBackdrop: ({openBackdrop}) => set((state) => ({
         editorOpts: {...state.editorOpts, openBackdrop}
@@ -16,6 +17,9 @@ export const appStore = create(zukeeper((set) => ({
     })),
     updateVfsSearch: ({ searchItemClick, searchLine }) => set((state) => ({
         editorOpts: {...state.editorOpts, searchItemClick, searchLine}
+    })),
+    updateTourDemo: ({ tourDemo }) => set((state) => ({
+        editorOpts: {...state.editorOpts, tourDemo}
     })),
     menuPopperOpts: {
         openTopBarMenuOne: false,
@@ -62,5 +66,14 @@ export const appStore = create(zukeeper((set) => ({
     },
     updateTerminal: ({open}) => set((state) => ({
         terminal: {...state.previewTab, open}
+    })),
+
+    dialogBox: {
+        open: false,
+        initiator: null,
+        param: null,
+    },
+    updateDialogBox: ({ open, initiator, param }) => set((state) => ({
+        dialogBox: {...state.dialogBox, open, initiator, param}
     })),
 })))

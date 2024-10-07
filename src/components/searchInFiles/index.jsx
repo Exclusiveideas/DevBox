@@ -9,10 +9,8 @@ import {
 import "@litecode-ide/virtual-file-system/dist/style.css";
 import { appStore } from "@/store/appStore";
 import { getActiveFileProps } from "@/utils/editorConstants";
-import { useMonaco } from "@monaco-editor/react";
 
 const SearchInFiles = () => {
-  const monaco = useMonaco();
   const updateVfsSearch = appStore((state) => state.updateVfsSearch); // global state
 
   const updateActiveFile = appStore(

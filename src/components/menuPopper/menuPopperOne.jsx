@@ -75,9 +75,7 @@ const MenuPopperOne = React.memo(({ anchorRefOne, pos }) => {
     setClickedMenuOneItem(`${e?.target?.outerText}`);
     if (pos == "optionbar") handleOpenMenuTwo();
     else if (pos == "topbar") handleTopBarMenuOneClick(e?.target?.outerText);
-    // else if (pos == "topbar" && e?.target?.outerText != "Editor")
-    //   closeMenuTwo();
-    // else return;
+    
   };
 
   const handleTopBarMenuOneClick = (outerText) => {

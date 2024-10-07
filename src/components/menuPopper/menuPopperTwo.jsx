@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import {
@@ -30,7 +30,10 @@ const MenuPopperTwo = React.memo(
     const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
     const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
     const updateActiveOptBar = appStore((state) => state.updateActiveOptBar);
+    const {ext: fileExt} = appStore((state) => state.activeFile); // global state
     const updateTerminal = appStore((state) => state.updateTerminal);
+
+    const updateDialogBox = appStore((state) => state.updateDialogBox);
 
     const openMenuPopperOne = //selects either to open the topbarMenu or optionsbarMenu
       pos == "optionbar"
@@ -103,9 +106,17 @@ const MenuPopperTwo = React.memo(
           break;
         case "New Terminal":
           closeMenuPopper();
+          if (!fileExt) {
+            updateDialogBox({
+              open: true,
+              initiator: "terminal",
+            });
+            return;
+          }
           updateTerminal({
             open: true,
           });
+          
         default:
           return;
       }

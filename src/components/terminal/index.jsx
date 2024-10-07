@@ -153,7 +153,7 @@ const TerminalComponent = () => {
         break;
       case "compile":
         if (activeFileValRef.current) {
-          term.writeln("> Compiling Active File");
+          term.writeln("> Compiling Active File...");
           sendCompileCommand(activeFileValRef.current);
         } else {
           term.writeln("> Nothing to compile: Make sure your file is open and active");

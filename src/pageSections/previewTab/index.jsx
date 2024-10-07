@@ -17,7 +17,14 @@ const PreviewTab = () => {
   useEffect(() => {
     if (!previewTab.open) return;
 
-    setHtmlContent(previewTab.renderContent);
+    const str = previewTab.renderContent;
+    const removedSpaces = str.replace(/\s+/g, '');
+
+    if (removedSpaces) {
+      setHtmlContent(previewTab.renderContent);
+    } else {
+      setHtmlContent('')
+    }
   }, [previewTab]);
 
   const closePreviewTab = () => { 

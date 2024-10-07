@@ -1,3 +1,62 @@
+export const INTIALTOURSTEP = 0;
+export const TOURSTEPS = [
+  {
+    element: ".vfs_tour", // 0
+    intro: "Here's lies your File Structure",
+  },
+  {
+    element: ".languageBox", // 1
+    intro: "This shows the current file type you are editing",
+  },
+  {
+    element: ".topbarLeftCont", // 2
+    intro: "This provides you with more app options like theme selection",
+  },
+  {
+    element: ".optionBarMenu", // 3
+    intro: "This provides you with more editor options like creating terminal",
+  },
+  {
+    element: ".optionbarSearchIcon", // 4
+    intro: "Click here to search for text(s) in files",
+  },
+  {
+    element: ".githubIcon", // 5
+    intro:
+      "Click here to create/connect a git repository for your app  <span>[⚠️ Feature Not Available yet]</span>",
+  },
+  {
+    element: ".demoEditor", // 6
+    intro:
+      "Here is the editor where you edit your code. It saves automatically ",
+  },
+  {
+    element: ".demoTerminal", // 7
+    intro:
+      "Here is your terminal - where you run compile and render commands among others. <span>[Note: It has a daily limit of code compilation]</span>",
+  },
+  {
+    element: ".previewTabCont", // 8
+    intro:
+      "Here is your Preview window - where you preview your code. <span>[Only .html code for now]</span>",
+  },
+  {
+    element: ".topbarSignIn", // 9
+    intro:
+      "Click here to create an account. <span>[⚠️ Feature not available yet]</span> ",
+  },
+  {
+    element: ".topbarShare", // 10
+    intro:
+      "Click here to share your project and collaborate with a friend.t <span>[⚠️ Feature not available yet]</span> ",
+  },
+];
+
+
+
+
+
+
 export const optionBarMenuOptOne = [
   "File",
   "Edit",
@@ -7,6 +66,7 @@ export const optionBarMenuOptOne = [
   "Terminal",
   "Help",
 ];
+
 export const optionBarMenuOptTwo = {
   File: [
     [
@@ -102,6 +162,7 @@ export const topBarMenuOptOne = [
   "Version: 1.0.0",
   "Sign In",
 ];
+
 export const topBarMenuOptTwo = [
   [
     ["User Preferences", "Ctrl ,"],
