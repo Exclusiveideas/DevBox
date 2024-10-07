@@ -15,7 +15,7 @@ import { appStore } from "@/store/appStore";
 
 const OptionBar = () => {
   const menuPopperOpts = appStore((state) => state.menuPopperOpts); // global state
-  const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne);
+  const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts);
   const openMenuPopperOne = menuPopperOpts?.openOptBarMenuOne;
 
   const { activeOpt } = appStore((state) => state.optionBar); // global state
@@ -24,7 +24,7 @@ const OptionBar = () => {
   const anchorRefOne = useRef(null);
 
   const handleToggleMenuOne = () => {
-    updateOptBarMenuOne({
+    updateMenuPopperOpts({
       openOptBarMenuOne: !openMenuPopperOne,
     });
   };

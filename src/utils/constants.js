@@ -67,6 +67,7 @@ export const optionBarMenuOptOne = [
   "Help",
 ];
 
+
 export const optionBarMenuOptTwo = {
   File: [
     [
@@ -162,6 +163,7 @@ export const topBarMenuOptOne = [
   "Version: 1.0.0",
   "Sign In",
 ];
+
 
 export const topBarMenuOptTwo = [
   [

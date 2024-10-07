@@ -28,7 +28,7 @@ const EditorComp = () => {
   const updateActiveFile = appStore((state) => state.updateActiveFile);
   const updateTerminal = appStore((state) => state.updateTerminal);
   
-  const updateVfsSearch = appStore((state) => state.updateVfsSearch); // global state
+  const updateEditorOpts = appStore((state) => state.updateEditorOpts); // global state
 
   const [jumpToLine, setJumpToLine] = useState(0);
   const [vars, setVars] = useState({});
@@ -193,7 +193,7 @@ const EditorComp = () => {
       },
     ]);
 
-    updateVfsSearch({
+    updateEditorOpts({
       searchItemClick: false,
       searchLine: null,
     });
@@ -232,7 +232,7 @@ const EditorComp = () => {
             height="100%"
             defaultLanguage="javascript"
             defaultValue={""}
-            value={activeFile?.value}
+            value={activeFile?.value} 
             theme="vs-dark"
             onChange={handleEditorChange}
             language={`${activeFile?.language}`}

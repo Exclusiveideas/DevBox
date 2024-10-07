@@ -30,6 +30,7 @@ const MenuPopperTwo = React.memo(
     const updateOptBarMenuOne = appStore((state) => state.updateOptBarMenuOne); // global state
     const updateOptBarMenuTwo = appStore((state) => state.updateOptBarMenuTwo); // global state
     const updateActiveOptBar = appStore((state) => state.updateActiveOptBar);
+    const { open: openTerminal } = appStore((state) => state.terminal);
     const {ext: fileExt} = appStore((state) => state.activeFile); // global state
     const updateTerminal = appStore((state) => state.updateTerminal);
 

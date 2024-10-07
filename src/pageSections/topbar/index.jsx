@@ -7,31 +7,19 @@ import Image from "next/image";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuPopperOne from "@/components/menuPopper/menuPopperOne";
 import { appStore } from "@/store/appStore";
-import { editorFileLanguage } from "@/utils/editorConstants";
-import dynamic from "next/dynamic";
 
-
-
-const menuSpecials = {
-  menuTwoWithExpand: [],
-
-  menuTwoPreIcon: [], // work on this later,
-
-  menuTwoDisabled: [],
-}; 
 
 
 const TopBar = () => {
   
   const activeFile = appStore((state) => state.activeFile) // global state
-  const menuPopperOpts = appStore((state) => state.menuPopperOpts) // global state
-  const updateTopBarMenuOne = appStore((state) => state.updateTopBarMenuOne); // global state
-  const openMenuPopperOne = menuPopperOpts?.openTopBarMenuOne;
+  const { openTopBarMenuOne: openMenuPopperOne } = appStore((state) => state.menuPopperOpts) // global state
+  const updateMenuPopperOpts = appStore((state) => state.updateMenuPopperOpts); // global state
 
   const anchorRefOne = React.useRef(null);
   
   const handleToggleMenuOne = () => {
-      updateTopBarMenuOne({
+    updateMenuPopperOpts({
         openTopBarMenuOne: !openMenuPopperOne,
       });
   };
@@ -65,7 +53,6 @@ const TopBar = () => {
         <MenuPopperOne
           anchorRefOne={anchorRefOne}
           pos="topbar"
-          menuSpecials={menuSpecials}
         />
       </div>
       <div className="topbarMidCont">
