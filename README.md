@@ -3,6 +3,8 @@
 
 **DevBox** is a powerful web-based code editor designed to support over 20 popular programming languages. With a user-friendly interface, integrated terminal, and the ability to render HTML previews, DevBox aims to enhance your development workflow.
 
+DevBox [Server](https://github.com/Exclusiveideas/devbox-server) application.
+
 ## Features
 
 ### Language Support
