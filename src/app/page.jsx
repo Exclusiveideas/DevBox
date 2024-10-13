@@ -16,8 +16,7 @@ import { getFileTree } from "@litecode-ide/virtual-file-system";
 import { INTIALTOURSTEP, TOURSTEPS } from "@/utils/constants";
 import DialogBox from "@/components/DialogBox/dialogBox";
 import useWindowSize from "@/utils/hooks/useWindowSize";
-
-
+import Image from "next/image";
 
 const isEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -28,14 +27,12 @@ export default function Home() {
   const pausedStep = useRef(INTIALTOURSTEP);
   const fileSystemEmpty = isEmpty(getFileTree());
   const dialogBox = appStore((state) => state.dialogBox);
-  const updateDialogBox= appStore((state) => state.updateDialogBox);
-  const updateTourDemo= appStore((state) => state.updateTourDemo);
-  const stepsRef = useRef()
-
+  const updateDialogBox = appStore((state) => state.updateDialogBox);
+  const updateTourDemo = appStore((state) => state.updateTourDemo);
+  const stepsRef = useRef();
 
   const { width } = useWindowSize();
-  const breakpoint = 768; 
-
+  const breakpoint = 768;
 
   useEffect(() => {
     if (dialogBox.open) return;
@@ -44,29 +41,25 @@ export default function Home() {
       updateStepsPos();
       setStepsVisible(true);
     } else if (dialogBox.param == "close") {
-      pausedStep.current = 0
+      pausedStep.current = 0;
     }
-
   }, [dialogBox]);
 
-
   const updateStepsPos = () => {
-      if (pausedStep.current >= 5 && pausedStep.current <= 9) {
-        pausedStep.current = 5;
-        updateTourDemo({
-          tourDemo: true,
-        });
-      } else if (pausedStep.current >= 5) { 
-        updateTourDemo({
-          tourDemo: true,
-        });
-      }
-      stepsRef.current.updateStepElement(6);
-      stepsRef.current.updateStepElement(7);
-      stepsRef.current.updateStepElement(8);
-  }
-  
-  
+    if (pausedStep.current >= 5 && pausedStep.current <= 9) {
+      pausedStep.current = 5;
+      updateTourDemo({
+        tourDemo: true,
+      });
+    } else if (pausedStep.current >= 5) {
+      updateTourDemo({
+        tourDemo: true,
+      });
+    }
+    stepsRef.current.updateStepElement(6);
+    stepsRef.current.updateStepElement(7);
+    stepsRef.current.updateStepElement(8);
+  };
 
   const onExit = () => {
     setStepsVisible(false);
@@ -80,17 +73,15 @@ export default function Home() {
       pausedStep.current = e;
       updateDialogBox({
         open: true,
-        initiator: 'tour',
-        param: null
+        initiator: "tour",
+        param: null,
       });
     }
 
     return true;
   };
 
-
   const onBeforeChange = (e) => {
-
     if (e == 5) {
       updateTourDemo({
         tourDemo: true,
@@ -99,15 +90,36 @@ export default function Home() {
       stepsRef.current.updateStepElement(6);
       stepsRef.current.updateStepElement(7);
       stepsRef.current.updateStepElement(8);
-    } 
-  }
- 
-
+    }
+  };
 
   return (
     <>
       {width <= breakpoint && (
         <div className={styles.responsive_message}>
+          <div className={styles.bg_imgCont}>
+            <Image
+              src="/logo_alpha.png"
+              width={300}
+              height={300}
+              alt="Background logo"
+              className={styles.bg_logo}
+            />
+            <Image
+              src="/logo_alpha.png"
+              width={300}
+              height={300}
+              alt="Background logo"
+              className={styles.bg_logo}
+            />
+            <Image
+              src="/logo_alpha.png"
+              width={300}
+              height={300}
+              alt="Background logo"
+              className={styles.bg_logo}
+            />
+          </div>
           <p>This app should be viewed on a larger screen</p>
         </div>
       )}
@@ -161,7 +173,7 @@ const Page = () => {
               />
             </div>
           )}
-          {!openPreviewTab && tourDemo && (<PreviewTab />)}
+          {!openPreviewTab && tourDemo && <PreviewTab />}
         </div>
       </div>
     </main>
