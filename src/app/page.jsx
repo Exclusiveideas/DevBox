@@ -11,7 +11,8 @@ import { SplitView } from "@/components/splitView/splitView";
 import { appStore } from "@/store/appStore";
 import { Steps } from "intro.js-react";
 import "intro.js/introjs.css";
-import { getFileTree } from "@litecode-ide/virtual-file-system";
+import { getFileTree } from '../lib/my-modified-modules/litecode-ide-mod/dist/@litecode-ide/virtual-file-system.es';
+
 
 import { INTIALTOURSTEP, TOURSTEPS } from "@/utils/constants";
 import DialogBox from "@/components/DialogBox/dialogBox";

@@ -13,8 +13,8 @@ import {
   getFileTree,
   updateFile,
   getSelectedFile,
-} from "@litecode-ide/virtual-file-system";
-import "@litecode-ide/virtual-file-system/dist/style.css";
+} from '../../lib/my-modified-modules/litecode-ide-mod/dist/@litecode-ide/virtual-file-system.es';
+import "../../lib/my-modified-modules/litecode-ide-mod/dist/style.css";
 import { debounce } from "@/utils/functions";
 import dynamic from "next/dynamic";
 import { ClockLoader as Loader } from "react-spinners";

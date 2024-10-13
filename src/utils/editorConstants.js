@@ -1,7 +1,7 @@
 import { loader } from "@monaco-editor/react";
 import {
   getFileTree,
-} from "@litecode-ide/virtual-file-system";
+} from "../lib/my-modified-modules/litecode-ide-mod/dist/@litecode-ide/virtual-file-system.es";
 
 export const editorThemes = ["vs", "vs-dark", "hc-black", "hc-light"];
 

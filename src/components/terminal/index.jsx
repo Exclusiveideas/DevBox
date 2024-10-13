@@ -6,7 +6,7 @@ import "xterm/css/xterm.css";
 import "./terminal.css";
 import { io } from "socket.io-client";
 import { appStore } from "@/store/appStore";
-import { getFileTree } from "@litecode-ide/virtual-file-system";
+import { getFileTree } from "../../lib/my-modified-modules/litecode-ide-mod/dist/@litecode-ide/virtual-file-system.es";
 
 const terminalOptions = {
   cursorBlink: true,
@@ -130,7 +130,7 @@ const TerminalComponent = () => {
         break;
       case "compile":
         if (activeFileValRef.current) {
-          term.writeln("> Compiling Active File...");
+          term.writeln("> Compiling Active File... (give it a few more seconds, it's a free service)");
           sendCompileCommand(activeFileValRef.current);
         } else {
           term.writeln(
