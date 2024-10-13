@@ -16,8 +16,6 @@ const RightPane = ({ children, rightWidth, openPreviewTab }) => {
       (rightWidth <= MIN_WIDTH
         ? MIN_WIDTH
         : rightWidth);
-    
-    console.log("w: ", width);
 
     rightRef.current.style.width = `${width}px`;
   }, [rightWidth, openPreviewTab]);

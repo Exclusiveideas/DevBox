@@ -197,8 +197,6 @@ const EditorComp = () => {
       searchItemClick: false,
       searchLine: null,
     });
-
-    console.log('editorOpts: ', editorOpts)
   }, [monacoEditor, monaco, editorOpts?.searchItemClick]);
     
 

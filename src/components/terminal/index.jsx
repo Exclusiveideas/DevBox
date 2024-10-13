@@ -26,7 +26,7 @@ const terminalOptions = {
   fontSize: 14,
 };
 
-const SERVERDOMAIN = "http://localhost:8080/";
+const DevBoxServer = process.env.NEXT_PUBLIC_DEVBOX_SERVER;
 
 const TerminalComponent = () => {
   const terminalRef = useRef(null);
@@ -52,7 +52,7 @@ const TerminalComponent = () => {
     xtermInstance.current = term;
 
     // Initialize socket connection to your backend server
-    socketRef.current = io(SERVERDOMAIN);
+    socketRef.current = io(DevBoxServer);
 
     term.loadAddon(fitAddon.current);
     term.open(terminalRef.current);
@@ -78,7 +78,6 @@ const TerminalComponent = () => {
 
     const handleOutput = (data) => {
       const convertedData = Buffer.from(data, "base64").toString();
-      console.log("data: ", convertedData);
       term.write(convertedData);
       term.writeln("");
       term.write("> ");
