@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 import TopBar from "@/pageSections/topbar";
 import OptionBar from "@/pageSections/optionsbar";
@@ -8,7 +9,6 @@ import EditorBar from "@/pageSections/editorbar";
 import PreviewTab from "@/pageSections/previewTab";
 import { SplitView } from "@/components/splitView/splitView";
 import { appStore } from "@/store/appStore";
-import React, { useState, useRef, useEffect } from "react";
 import { Steps } from "intro.js-react";
 import "intro.js/introjs.css";
 import { getFileTree } from "@litecode-ide/virtual-file-system";
@@ -26,6 +26,7 @@ export default function Home() {
   const [stepsVisible, setStepsVisible] = useState(true);
   const pausedStep = useRef(INTIALTOURSTEP);
   const fileSystemEmpty = isEmpty(getFileTree());
+  // const fileSystemEmpty = isEmpty([]);
   const dialogBox = appStore((state) => state.dialogBox);
   const updateDialogBox = appStore((state) => state.updateDialogBox);
   const updateTourDemo = appStore((state) => state.updateTourDemo);
@@ -43,7 +44,7 @@ export default function Home() {
     } else if (dialogBox.param == "close") {
       pausedStep.current = 0;
     }
-  }, [dialogBox]);
+  }, [dialogBox, updateStepsPos]);
 
   const updateStepsPos = () => {
     if (pausedStep.current >= 5 && pausedStep.current <= 9) {

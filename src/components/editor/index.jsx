@@ -127,7 +127,7 @@ const EditorComp = () => {
   useEffect(() => {
     const fileId = getSelectedFile();
     updateFileValue(fileId, getFileContents(fileId));
-  }, []);
+  }, [updateFileValue]);
 
   const updateFileValue = (id, fileValue) => {
     if (!id) {

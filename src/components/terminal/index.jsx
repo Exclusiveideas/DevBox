@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from "react";
 import { Terminal } from "@xterm/xterm";
 import "xterm/css/xterm.css";
-import { FitAddon } from "@xterm/addon-fit";
 import "./terminal.css";
 import { io } from "socket.io-client";
 import { appStore } from "@/store/appStore";
@@ -31,7 +30,6 @@ const DevBoxServer = process.env.NEXT_PUBLIC_DEVBOX_SERVER;
 const TerminalComponent = () => {
   const terminalRef = useRef(null);
   const xtermInstance = useRef(null);
-  const fitAddon = useRef(new FitAddon());
   const buffer = useRef(""); // To store the current line of input
   const socketRef = useRef(null);
   const activeFileValRef = useRef(appStore((state) => state.activeFile));
@@ -49,12 +47,12 @@ const TerminalComponent = () => {
 
     // Initialize the terminal
     const term = new Terminal(terminalOptions);
+    
     xtermInstance.current = term;
 
     // Initialize socket connection to your backend server
     socketRef.current = io(DevBoxServer);
 
-    term.loadAddon(fitAddon.current);
     term.open(terminalRef.current);
     term.writeln('> Terminal')
     term.write('> ')
@@ -95,23 +93,8 @@ const TerminalComponent = () => {
 
       socketRef.current.disconnect(); // Cleanup socket connection
     };
-  }, []);
+  }, [handleTerminalInput]);
 
-  // Handle terminal resize on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (fitAddon.current) {
-        // fitAddon.current.fit();
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup the event listener on unmount
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const handleTerminalInput = (data, term) => {
     const code = data.charCodeAt(0);

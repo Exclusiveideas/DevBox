@@ -18,7 +18,7 @@ const RightPane = ({ children, rightWidth, openPreviewTab }) => {
         : rightWidth);
 
     rightRef.current.style.width = `${width}px`;
-  }, [rightWidth, openPreviewTab]);
+  }, [rightWidth, openPreviewTab, rightRef]);
 
   return (
     <div ref={rightRef} style={{ height: "100%" }}>
