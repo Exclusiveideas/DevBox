@@ -27,7 +27,7 @@ const EditorComp = () => {
   const activeFile = appStore((state) => state.activeFile); // global state
   const updateActiveFile = appStore((state) => state.updateActiveFile);
   const updateTerminal = appStore((state) => state.updateTerminal);
-  
+
   const updateEditorOpts = appStore((state) => state.updateEditorOpts); // global state
 
   const [jumpToLine, setJumpToLine] = useState(0);
@@ -35,11 +35,7 @@ const EditorComp = () => {
   const { monacoEditor, monaco } = vars;
 
   const handleEditorChange = (value) => {
-    
-    updateActiveFile({ ...activeFile, 
-      value: value,
-    });
-
+    updateActiveFile({ ...activeFile, value: value });
 
     if (!getSelectedFile()) {
       return; // no active file
@@ -47,8 +43,8 @@ const EditorComp = () => {
 
     // Debounced function to update file content
     const debouncedSave = debounce(() => {
-      const selectedFile = getSelectedFile()
-      if(selectedFile) updateFile(getSelectedFile(), value);
+      const selectedFile = getSelectedFile();
+      if (selectedFile) updateFile(getSelectedFile(), value);
     }, 1000); // 1 sec delay
 
     // Trigger the debounced function
@@ -127,15 +123,15 @@ const EditorComp = () => {
   useEffect(() => {
     const fileId = getSelectedFile();
     updateFileValue(fileId, getFileContents(fileId));
-  }, [updateFileValue]);
+  }, []);
 
-  const updateFileValue =  useCallback((id, fileValue) => {
+  const updateFileValue = (id, fileValue) => {
     if (!id) {
-      updateActiveFile({ 
+      updateActiveFile({
         value: null,
-        ext: '',
-        language: '',
-        languageName: '' 
+        ext: "",
+        language: "",
+        languageName: "",
       });
 
       return;
@@ -149,8 +145,7 @@ const EditorComp = () => {
       language: fileExt?.language,
       languageName: fileExt?.languageName,
     });
-
-  }, []);
+  };
 
   const getFileContents = (id) => {
     if (id === "") {
@@ -169,7 +164,7 @@ const EditorComp = () => {
 
   useEffect(() => {
     // for higlighting search text on the editor
-    
+
     if (
       !editorOpts?.searchItemClick ||
       !editorOpts?.searchLine ||
@@ -182,15 +177,25 @@ const EditorComp = () => {
 
     monacoEditor.createDecorationsCollection([
       {
-        range: new monaco.Range(editorOpts?.searchLine, 1, editorOpts?.searchLine, 1),
+        range: new monaco.Range(
+          editorOpts?.searchLine,
+          1,
+          editorOpts?.searchLine,
+          1
+        ),
         options: {
           isWholeLine: true,
           linesDecorationsClassName: "myLineDecoration",
         },
       },
       {
-        range: new monaco.Range(editorOpts?.searchLine, 1, editorOpts?.searchLine, 10),
-        options: { isWholeLine: true, inlineClassName: "myInlineDecoration", },
+        range: new monaco.Range(
+          editorOpts?.searchLine,
+          1,
+          editorOpts?.searchLine,
+          10
+        ),
+        options: { isWholeLine: true, inlineClassName: "myInlineDecoration" },
       },
     ]);
 
@@ -199,13 +204,10 @@ const EditorComp = () => {
       searchLine: null,
     });
   }, [monacoEditor, monaco, editorOpts, updateEditorOpts]);
-    
 
   async function handleEditorDidMount(monacoEditor, monaco) {
     setVars({ monacoEditor, monaco });
   }
-
-
 
   return (
     <div className="EditorCompWrapper">
@@ -231,13 +233,13 @@ const EditorComp = () => {
             height="100%"
             defaultLanguage="javascript"
             defaultValue={""}
-            value={activeFile?.value} 
+            value={activeFile?.value}
             theme="vs-dark"
             onChange={handleEditorChange}
             language={`${activeFile?.language}`}
             onMount={handleEditorDidMount}
             line={jumpToLine}
-            loading={<Loader color='white' />}
+            loading={<Loader color="white" />}
           />
           <EditorBackDrop />
         </div>

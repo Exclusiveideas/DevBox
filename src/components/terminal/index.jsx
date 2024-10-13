@@ -82,70 +82,6 @@ const TerminalComponent = () => {
     socketRef.current.off("output", handleOutput); // Remove the listener first if it exists
     socketRef.current.on("output", handleOutput); // Add the listener for "output"
 
-    function handleTerminalInput(data, term) {
-      const code = data.charCodeAt(0);
-      switch (code) {
-        case 13: // Enter
-          term.write("\r\n");
-          handleEnterKey(buffer.current, term);
-          buffer.current = "";
-          term.write("> ");
-          break;
-        case 127: // Backspace
-          if (buffer.current.length > 0) {
-            buffer.current = buffer.current.slice(0, -1);
-            // Move cursor back, clear the last character, and move back again
-            term.write("\b \b");
-          }
-          break;
-        case 32: // Space
-          buffer.current += " ";
-          term.write(" ");
-          break;
-        default:
-          // For all other characters, add them to the buffer and terminal
-          buffer.current += data;
-          term.write(data);
-          break;
-      }
-    };
-
-    function handleEnterKey(command, term) {
-      const trimmedCommand = command.trim();
-      if (!trimmedCommand) return;
-
-      switch (trimmedCommand) {
-        case "clear":
-          term.clear();
-          term.writeln("> Terminal");
-          break;
-        case "compile":
-          if (activeFileValRef.current) {
-            term.writeln("> Compiling Active File...");
-            sendCompileCommand(activeFileValRef.current);
-          } else {
-            term.writeln(
-              "> Nothing to compile: Make sure your file is open and active"
-            );
-          }
-          break;
-        default:
-          if (trimmedCommand.startsWith("render")) {
-            // Extract the text after "render"
-            const renderPath = trimmedCommand.slice("render".length).trim();
-
-            if (renderPath) {
-              renderFilePath(renderPath, term);
-            } else {
-              term.writeln("> Please provide a path to render");
-            }
-          } else {
-            term.writeln(`> Command not recognized: ${trimmedCommand}`);
-          }
-          break;
-      }
-    }
-
     return () => {
       if (xtermInstance.current) {
         xtermInstance.current.dispose();
@@ -154,6 +90,70 @@ const TerminalComponent = () => {
       socketRef.current.disconnect(); // Cleanup socket connection
     };
   }, []);
+
+  function handleTerminalInput(data, term) {
+    const code = data.charCodeAt(0);
+    switch (code) {
+      case 13: // Enter
+        term.write("\r\n");
+        handleEnterKey(buffer.current, term);
+        buffer.current = "";
+        term.write("> ");
+        break;
+      case 127: // Backspace
+        if (buffer.current.length > 0) {
+          buffer.current = buffer.current.slice(0, -1);
+          // Move cursor back, clear the last character, and move back again
+          term.write("\b \b");
+        }
+        break;
+      case 32: // Space
+        buffer.current += " ";
+        term.write(" ");
+        break;
+      default:
+        // For all other characters, add them to the buffer and terminal
+        buffer.current += data;
+        term.write(data);
+        break;
+    }
+  }
+
+  function handleEnterKey(command, term) {
+    const trimmedCommand = command.trim();
+    if (!trimmedCommand) return;
+
+    switch (trimmedCommand) {
+      case "clear":
+        term.clear();
+        term.writeln("> Terminal");
+        break;
+      case "compile":
+        if (activeFileValRef.current) {
+          term.writeln("> Compiling Active File...");
+          sendCompileCommand(activeFileValRef.current);
+        } else {
+          term.writeln(
+            "> Nothing to compile: Make sure your file is open and active"
+          );
+        }
+        break;
+      default:
+        if (trimmedCommand.startsWith("render")) {
+          // Extract the text after "render"
+          const renderPath = trimmedCommand.slice("render".length).trim();
+
+          if (renderPath) {
+            renderFilePath(renderPath, term);
+          } else {
+            term.writeln("> Please provide a path to render");
+          }
+        } else {
+          term.writeln(`> Command not recognized: ${trimmedCommand}`);
+        }
+        break;
+    }
+  }
 
   const sendCompileCommand = (code) => {
     const encodedCommand = btoa(code);

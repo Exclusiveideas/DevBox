@@ -26,7 +26,6 @@ export default function Home() {
   const [stepsVisible, setStepsVisible] = useState(true);
   const pausedStep = useRef(INTIALTOURSTEP);
   const fileSystemEmpty = isEmpty(getFileTree());
-  // const fileSystemEmpty = isEmpty([]);
   const dialogBox = appStore((state) => state.dialogBox);
   const updateDialogBox = appStore((state) => state.updateDialogBox);
   const updateTourDemo = appStore((state) => state.updateTourDemo);
@@ -38,22 +37,6 @@ export default function Home() {
   useEffect(() => {
     if (dialogBox.open) return;
 
-    const updateStepsPos = () => {
-      if (pausedStep.current >= 5 && pausedStep.current <= 9) {
-        pausedStep.current = 5;
-        updateTourDemo({
-          tourDemo: true,
-        });
-      } else if (pausedStep.current >= 5) {
-        updateTourDemo({
-          tourDemo: true,
-        });
-      }
-      stepsRef.current.updateStepElement(6);
-      stepsRef.current.updateStepElement(7);
-      stepsRef.current.updateStepElement(8);
-    };
-
     if (dialogBox.param == "continue") {
       updateStepsPos();
       setStepsVisible(true);
@@ -61,6 +44,22 @@ export default function Home() {
       pausedStep.current = 0;
     }
   }, [dialogBox]);
+
+  const updateStepsPos = () => {
+    if (pausedStep.current >= 5 && pausedStep.current <= 9) {
+      pausedStep.current = 5;
+      updateTourDemo({
+        tourDemo: true,
+      });
+    } else if (pausedStep.current >= 5) {
+      updateTourDemo({
+        tourDemo: true,
+      });
+    }
+    stepsRef.current.updateStepElement(6);
+    stepsRef.current.updateStepElement(7);
+    stepsRef.current.updateStepElement(8);
+  };
 
   const onExit = () => {
     setStepsVisible(false);
