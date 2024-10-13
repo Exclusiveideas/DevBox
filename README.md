@@ -90,7 +90,7 @@ We welcome contributions to DevBox! To contribute, please follow these steps:
 - Submit a pull request.
 
 ## License
-DevBox is open source and distributed under the MIT License. See LICENSE for more information.
+DevBox is open source and distributed under the MIT License.
 
 ## Contact
 For any questions or feedback, please open an issue on GitHub or reach out to me on [Linkedln](https://www.linkedin.com/in/muftau/).
