@@ -129,7 +129,7 @@ const EditorComp = () => {
     updateFileValue(fileId, getFileContents(fileId));
   }, [updateFileValue]);
 
-  const updateFileValue = (id, fileValue) => {
+  const updateFileValue =  useCallback((id, fileValue) => {
     if (!id) {
       updateActiveFile({ 
         value: null,
@@ -149,7 +149,8 @@ const EditorComp = () => {
       language: fileExt?.language,
       languageName: fileExt?.languageName,
     });
-  };
+
+  }, []);
 
   const getFileContents = (id) => {
     if (id === "") {
@@ -197,7 +198,7 @@ const EditorComp = () => {
       searchItemClick: false,
       searchLine: null,
     });
-  }, [monacoEditor, monaco, editorOpts?.searchItemClick]);
+  }, [monacoEditor, monaco, editorOpts, updateEditorOpts]);
     
 
   async function handleEditorDidMount(monacoEditor, monaco) {

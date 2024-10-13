@@ -41,7 +41,7 @@ export const SplitView = ({ right, className }) => {
     MIN_WIDTH = Math.floor(splitPaneWidth / 3);
     MAX_RIGHT_WIDTH = splitPaneWidth;
 
-  }, [splitPaneRef.current]);
+  }, [splitPaneRef]);
 
   const onMouseDown = (e) => {
     setDragging(true);

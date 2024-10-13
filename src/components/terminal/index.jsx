@@ -6,9 +6,7 @@ import "xterm/css/xterm.css";
 import "./terminal.css";
 import { io } from "socket.io-client";
 import { appStore } from "@/store/appStore";
-import {
-  getFileTree,
-} from "@litecode-ide/virtual-file-system";
+import { getFileTree } from "@litecode-ide/virtual-file-system";
 
 const terminalOptions = {
   cursorBlink: true,
@@ -38,32 +36,31 @@ const TerminalComponent = () => {
   const updatePreviewTab = appStore((state) => state.updatePreviewTab);
 
   useEffect(() => {
-    activeFileValRef.current = activeFileValue
+    activeFileValRef.current = activeFileValue;
   }, [activeFileValue]);
-  
 
   useEffect(() => {
     if (!terminalRef.current) return;
 
     // Initialize the terminal
     const term = new Terminal(terminalOptions);
-    
+
     xtermInstance.current = term;
 
     // Initialize socket connection to your backend server
     socketRef.current = io(DevBoxServer);
 
     term.open(terminalRef.current);
-    term.writeln('> Terminal')
-    term.write('> ')
+    term.writeln("> Terminal");
+    term.write("> ");
 
     term.attachCustomKeyEventHandler((event) => {
-      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         event.preventDefault(); // Prevent default behavior
         return false; // Stop propagation
       }
       return true; // Allow other keys
-    })
+    });
 
     socketRef.current.on("connect", () => {
       // console.log("socket.id: ", socketRef.current.id);
@@ -85,7 +82,70 @@ const TerminalComponent = () => {
     socketRef.current.off("output", handleOutput); // Remove the listener first if it exists
     socketRef.current.on("output", handleOutput); // Add the listener for "output"
 
-   
+    function handleTerminalInput(data, term) {
+      const code = data.charCodeAt(0);
+      switch (code) {
+        case 13: // Enter
+          term.write("\r\n");
+          handleEnterKey(buffer.current, term);
+          buffer.current = "";
+          term.write("> ");
+          break;
+        case 127: // Backspace
+          if (buffer.current.length > 0) {
+            buffer.current = buffer.current.slice(0, -1);
+            // Move cursor back, clear the last character, and move back again
+            term.write("\b \b");
+          }
+          break;
+        case 32: // Space
+          buffer.current += " ";
+          term.write(" ");
+          break;
+        default:
+          // For all other characters, add them to the buffer and terminal
+          buffer.current += data;
+          term.write(data);
+          break;
+      }
+    };
+
+    function handleEnterKey(command, term) {
+      const trimmedCommand = command.trim();
+      if (!trimmedCommand) return;
+
+      switch (trimmedCommand) {
+        case "clear":
+          term.clear();
+          term.writeln("> Terminal");
+          break;
+        case "compile":
+          if (activeFileValRef.current) {
+            term.writeln("> Compiling Active File...");
+            sendCompileCommand(activeFileValRef.current);
+          } else {
+            term.writeln(
+              "> Nothing to compile: Make sure your file is open and active"
+            );
+          }
+          break;
+        default:
+          if (trimmedCommand.startsWith("render")) {
+            // Extract the text after "render"
+            const renderPath = trimmedCommand.slice("render".length).trim();
+
+            if (renderPath) {
+              renderFilePath(renderPath, term);
+            } else {
+              term.writeln("> Please provide a path to render");
+            }
+          } else {
+            term.writeln(`> Command not recognized: ${trimmedCommand}`);
+          }
+          break;
+      }
+    }
+
     return () => {
       if (xtermInstance.current) {
         xtermInstance.current.dispose();
@@ -93,103 +153,41 @@ const TerminalComponent = () => {
 
       socketRef.current.disconnect(); // Cleanup socket connection
     };
-  }, [handleTerminalInput]);
-
-
-  const handleTerminalInput = (data, term) => {
-    const code = data.charCodeAt(0);
-    switch (code) {
-      case 13: // Enter
-        term.write("\r\n");
-        handleEnterKey(buffer.current, term);
-        buffer.current = "";
-        term.write("> ");
-        break;
-      case 127: // Backspace
-        if (buffer.current.length > 0) {
-          buffer.current = buffer.current.slice(0, -1);
-          // Move cursor back, clear the last character, and move back again
-          term.write("\b \b");
-        }
-        break;
-      case 32: // Space
-        buffer.current += " "; 
-        term.write(" "); 
-        break;
-      default:
-        // For all other characters, add them to the buffer and terminal
-        buffer.current += data;
-        term.write(data);
-        break;
-    }
-  };
-
-  const handleEnterKey = (command, term) => {
-    const trimmedCommand = command.trim()
-    if (!trimmedCommand) return;
-
-    switch (trimmedCommand) {
-      case "clear":
-        term.clear();
-        term.writeln("> Terminal");
-        break;
-      case "compile":
-        if (activeFileValRef.current) {
-          term.writeln("> Compiling Active File...");
-          sendCompileCommand(activeFileValRef.current);
-        } else {
-          term.writeln("> Nothing to compile: Make sure your file is open and active");
-        }
-        break;
-      default:
-        if (trimmedCommand.startsWith("render")) {
-          // Extract the text after "render"
-          const renderPath = trimmedCommand.slice("render".length).trim();
-  
-          if (renderPath) {
-            renderFilePath(renderPath, term)
-          } else {
-            term.writeln("> Please provide a path to render");
-          }
-        } else {
-          term.writeln(`> Command not recognized: ${trimmedCommand}`);
-        }
-        break;
-    }
-  };
+  }, []);
 
   const sendCompileCommand = (code) => {
-    const encodedCommand = btoa(code); 
+    const encodedCommand = btoa(code);
     socketRef.current.emit("input", encodedCommand); // Send input to the backend
   };
 
   const renderFilePath = (path, term) => {
-
     if (!path.endsWith(".html")) {
       term.writeln("> Devbox can only render .html files");
-      return
+      return;
     }
 
     const tree = getFileTree();
     let pathExist = false;
 
     for (let key in tree) {
-      if (tree.hasOwnProperty(key) && key == path) { // Check if the property is not inherited
-        pathExist = true
+      if (tree.hasOwnProperty(key) && key == path) {
+        // Check if the property is not inherited
+        pathExist = true;
         term.writeln(`> Rendering ${path} ...`);
-    
+
         updatePreviewTab({
           open: true,
           renderContent: tree[key].content,
         });
-        return
-      } 
+        return;
+      }
     }
-    
 
-    if(!pathExist) {
+    if (!pathExist) {
       term.writeln(`${path} does not exist`);
-      term.writeln(`Tip: start from the top directory "/" i.e render /folder1/xxx.html`);
+      term.writeln(
+        `Tip: start from the top directory "/" i.e render /folder1/xxx.html`
+      );
     }
   };
 
